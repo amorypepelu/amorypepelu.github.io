@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="二进制文件、压缩文件操作例子很少。">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python文件读写">
+<meta property="og:url" content="https://amorypepelu.github.io/2016/10/28/Python文件读写/index.html">
+<meta property="og:site_name" content="AmoryPepelu">
+<meta property="og:description" content="二进制文件、压缩文件操作例子很少。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-11-20T12:08:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python文件读写">
+<meta name="twitter:description" content="二进制文件、压缩文件操作例子很少。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://amorypepelu.github.io/2016/10/28/Python文件读写/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python文件读写 | AmoryPepelu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AmoryPepelu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/10/28/Python文件读写/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AmoryPepelu">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AmoryPepelu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python文件读写
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-28 22:33:39" itemprop="dateCreated datePublished" datetime="2016-10-28T22:33:39+08:00">2016-10-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-11-20 20:08:48" itemprop="dateModified" datetime="2016-11-20T20:08:48+08:00">2016-11-20</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>二进制文件、压缩文件操作例子很少。<br><a id="more"></a></p>
+<h2 id="获取帮助信息"><a href="#获取帮助信息" class="headerlink" title="获取帮助信息"></a>获取帮助信息</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">help(object)</span><br><span class="line">//such <span class="keyword">as</span> looking <span class="keyword">for</span> print() method<span class="string">'s help</span></span><br><span class="line"><span class="string">help(print)</span></span><br></pre></td></tr></table></figure>
+<h2 id="py文件的编码"><a href="#py文件的编码" class="headerlink" title="py文件的编码"></a>py文件的编码</h2><p>如果你有用到非ASCII字符，则需要在文件头部进行字符编码的声明：<code># code: UTF-8</code>，或者：<code>#-*- coding: UTF-8 -*-</code></p>
+<h2 id="读取文本内容"><a href="#读取文本内容" class="headerlink" title="读取文本内容"></a>读取文本内容</h2><p>一次性全部读取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'a.json'</span>,<span class="string">'rt'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	data = f.read()</span><br><span class="line"></span><br><span class="line">print(data)</span><br></pre></td></tr></table></figure>
+<p>分行读取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'a.json'</span>,<span class="string">'rt'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> f :</span><br><span class="line">		print(line , end = <span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'b.txt'</span>,<span class="string">'wt'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	f.write(<span class="string">'a'</span>)</span><br><span class="line">	f.write(<span class="string">'b'</span>)</span><br></pre></td></tr></table></figure>
+<p>如果文件系统中没有<code>b.txt</code>文件，会新建一个<code>b.txt</code>文件。</p>
+<p>output：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab</span><br></pre></td></tr></table></figure>
+<p>使用<code>print()</code>函数写入数据，把输出重定向到文件中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'b.txt'</span>,<span class="string">'wt'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	print(<span class="string">'c'</span>,file=f)</span><br><span class="line">	print(<span class="string">'d'</span>,file=f)</span><br></pre></td></tr></table></figure>
+<p>output：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
+<p>使用<code>wt</code>会覆盖已有内容，使用<code>at</code>则是追加内容，追加时注意，不是换行追加而是在原文件结束的位置追加的。<code>print</code>函数默认以换行符结尾，可以使用<code>print(&#39;c&#39;,file=f,end=&#39;&#39;)</code>修改。</p>
+<h2 id="with语句"><a href="#with语句" class="headerlink" title="with语句"></a>with语句</h2><p>使用<code>with</code>语句会自动关闭文件，不使用的话可以用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f = open(<span class="string">'b.txt'</span>,<span class="string">'rt'</span>,encoding=<span class="string">'utf8'</span>)</span><br><span class="line">data = f.read()</span><br><span class="line">print(data)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<h2 id="被操作文件的编码"><a href="#被操作文件的编码" class="headerlink" title="被操作文件的编码"></a>被操作文件的编码</h2><p>Python文件读写采用系统默认的编码，可以使用<code>encoding=&#39;&#39;</code>修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(<span class="string">'b.txt'</span>,<span class="string">'rt'</span>,encoding=<span class="string">'utf8'</span>)</span><br></pre></td></tr></table></figure>
+<p>如果文件编码结构被破坏，可以使用一个可选参数<code>errors</code>来处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f = open(<span class="string">'b.txt'</span>,<span class="string">'rt'</span>,encoding=<span class="string">'ascii'</span>,errors=<span class="string">'ignore'</span>)</span><br><span class="line">data = f.read()</span><br><span class="line">print(data)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<p>使用<code>ignore</code>会忽略错误的字符，使用<code>replace</code>即使显示的是一串乱码也会显示。</p>
+<h2 id="以不同的行结尾或分隔符完成打印"><a href="#以不同的行结尾或分隔符完成打印" class="headerlink" title="以不同的行结尾或分隔符完成打印"></a>以不同的行结尾或分隔符完成打印</h2><p><code>sep</code>表示语句间的分隔符，<code>end</code>表示以何种符号结尾。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'pepelu'</span>,<span class="number">23</span>,<span class="string">'yui'</span>,sep=<span class="string">','</span>,end=<span class="string">''</span>)</span><br><span class="line">print(<span class="string">'pepelu'</span>,<span class="number">23</span>,<span class="string">'yui'</span>,sep=<span class="string">';'</span>,end=<span class="string">''</span>)</span><br><span class="line">print(<span class="string">'--------------'</span>)</span><br><span class="line">print(<span class="string">'pepelu'</span>,<span class="number">23</span>,<span class="string">'yui'</span>,sep=<span class="string">';'</span>,end=<span class="string">'!!\n'</span>)</span><br><span class="line">print(<span class="string">'--------------'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    print(i,end=<span class="string">' '</span>)</span><br></pre></td></tr></table></figure>
+<p>output：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pepelu,23,yui</span><br><span class="line">pepelu;23;yui</span><br><span class="line">--------------</span><br><span class="line">pepelu;23;yui!!</span><br><span class="line">--------------</span><br><span class="line">0 1 2 3 4</span><br></pre></td></tr></table></figure>
+<h2 id="读写二进制文件"><a href="#读写二进制文件" class="headerlink" title="读写二进制文件"></a>读写二进制文件</h2><p>使用<code>open</code>函数的<code>rb</code>或<code>wb</code>或<code>xb</code>对文件进行读写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#read</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'b.bin'</span>,<span class="string">'rb'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	data = f.read()</span><br><span class="line">	print(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">#write</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'b.bin'</span>,<span class="string">'wb'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	f.write(<span class="string">b'hello,bitch'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="对不存在的文件执行写入操作"><a href="#对不存在的文件执行写入操作" class="headerlink" title="对不存在的文件执行写入操作"></a>对不存在的文件执行写入操作</h2><p>使用<code>wt</code>对文件进行写操作，如果文件不存在，会新建一个文件，使用<code>xt</code>对文件执行写操作，如果文件不存在，也会新建文件，而不是终止执行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'c.txt'</span>,<span class="string">'xt'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	f.write(<span class="string">'fuck'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="在字符上执行IO操作"><a href="#在字符上执行IO操作" class="headerlink" title="在字符上执行IO操作"></a>在字符上执行IO操作</h2><p>不会创建新文件，但可以把<code>io.StringIO()</code>返回的对象当做文件对象来操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io</span><br><span class="line">s = io.StringIO()</span><br><span class="line">s.write(<span class="string">'hello,bitch'</span>)</span><br><span class="line"><span class="comment"># data = s.read(4) 无输出</span></span><br><span class="line">print(s.getvalue())</span><br><span class="line"></span><br><span class="line">f = io.StringIO(<span class="string">'another bitch'</span>)</span><br><span class="line">print(f.read())</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello,bitch</span><br><span class="line">another bitch</span><br></pre></td></tr></table></figure>
+<h2 id="path库"><a href="#path库" class="headerlink" title="path库"></a>path库</h2><ul>
+<li>os.path.exists()：判断文件是否存在</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">'b.txt'</span>):</span><br><span class="line">	print(<span class="string">'b.txt does not exists'</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">	print(<span class="string">'b.txt exists'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>path.basename() : 获取文件名(不包括文件目录)，目录名（不包括父目录）</li>
+<li>path.dirname() : 获取文件目录，不包括文件名，字符串文件目录要加<code>\\</code></li>
+<li>path.join() : 链接多个文件目录，除去第一个参数之外，其他参数不能包含盘符</li>
+<li>path.expanduser() : 文件目录前自动扩展用户目录</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> os <span class="keyword">import</span> path</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts\\b.txt'</span></span><br><span class="line"></span><br><span class="line">data = path.basename(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.dirname(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.join(<span class="string">'tmp'</span>,<span class="string">'jb'</span>,path.basename(fp))</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.join(path.dirname(fp),<span class="string">'jb'</span>,path.basename(fp))</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.expanduser(<span class="string">'~\\data\\b.txt'</span>)</span><br><span class="line">print(data)</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\Github\iPotato\iDrafts&gt;py a.py</span><br><span class="line">b.txt</span><br><span class="line">E:\Github\iPotato\iDrafts</span><br><span class="line">tmp\jb\b.txt</span><br><span class="line">E:\Github\iPotato\iDrafts\jb\b.txt</span><br><span class="line">C:\Users\John\data\b.txt</span><br></pre></td></tr></table></figure>
+<ul>
+<li>path.splitext() : 分割文件名与后缀名</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> os <span class="keyword">import</span> path</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts\\b.txt'</span></span><br><span class="line"></span><br><span class="line">data = path.splitext(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.splitext(fp)[<span class="number">0</span>]</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.splitext(fp)[<span class="number">1</span>]</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.splitext(path.basename(fp))[<span class="number">0</span>]</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.splitext(path.basename(fp))[<span class="number">1</span>]</span><br><span class="line">print(data)</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(&apos;E:\\Github\\iPotato\\iDrafts\\b&apos;, &apos;.txt&apos;)</span><br><span class="line">E:\Github\iPotato\iDrafts\b</span><br><span class="line">.txt</span><br><span class="line">b</span><br><span class="line">.txt</span><br></pre></td></tr></table></figure>
+<h2 id="检测文件是否存在"><a href="#检测文件是否存在" class="headerlink" title="检测文件是否存在"></a>检测文件是否存在</h2><ul>
+<li>path.isfile() : 检测是否是一个文件，返回值：True 或者 False</li>
+<li>path.isdir() : 检测是否是一个目录</li>
+<li>path.islink() : 是否是链接</li>
+<li>path.realpath() :　获取物理存储位置</li>
+<li>path.getsize() : 获取文件大小</li>
+<li>path.getmtime() : 文件修改时间</li>
+<li>path.getctime() : 文件创建时间</li>
+</ul>
+<p>获取文件的元数据之前要注意权限检测，使用<code>os.stat()</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> os <span class="keyword">import</span> path</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts\\b.txt'</span></span><br><span class="line"></span><br><span class="line">data = path.isfile(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.isdir(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.islink(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.realpath(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.getsize(fp)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line">data = path.getmtime(fp)</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">time_data = time.ctime(data)</span><br><span class="line">print(time_data)</span><br></pre></td></tr></table></figure>
+<h2 id="目录列表"><a href="#目录列表" class="headerlink" title="目录列表"></a>目录列表</h2><ul>
+<li>取指定目录中的文件和目录，列表并输入文件中保存。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts'</span></span><br><span class="line"></span><br><span class="line">names = os.listdir(fp)</span><br><span class="line">print(names)</span><br><span class="line"></span><br><span class="line">f = open(<span class="string">'E:\\Github\\iPotato\\iDrafts\\b.txt'</span>,<span class="string">'wt'</span>,encoding=<span class="string">'utf8'</span>)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> names :</span><br><span class="line">	print(line,file = f)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<p>遇到一个错误：<code>Python PermissionError  Permission denied</code>，是因为之前打开<code>b.txt</code>没有关闭。</p>
+<ul>
+<li>过滤列表中的文件名：<code>[for ... in ... if...]</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts'</span></span><br><span class="line"></span><br><span class="line">names = [name <span class="keyword">for</span> name <span class="keyword">in</span> os.listdir(fp) <span class="keyword">if</span> name.find(<span class="string">'a'</span>)]</span><br><span class="line">print(names)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<code>glob</code>文件名匹配：</li>
+</ul>
+<p>找出文件名中包含<code>a</code>的文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="comment"># 输出包含目录</span></span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts\\*a*.*'</span></span><br><span class="line"><span class="comment"># 输出不包含目录，工作区间在工程的工作区间</span></span><br><span class="line"><span class="comment"># fp = '*a*.*'</span></span><br><span class="line">files = glob.glob(fp)</span><br><span class="line">print(files)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<code>fnmatch</code> :</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fnmatch <span class="keyword">import</span> fnmatch</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">fp = <span class="string">'E:\\Github\\iPotato\\iDrafts'</span></span><br><span class="line">files = [name <span class="keyword">for</span> name <span class="keyword">in</span> os.listdir(fp) <span class="keyword">if</span> fnmatch(name,<span class="string">'*.txt'</span>)]</span><br><span class="line">print(files)</span><br></pre></td></tr></table></figure>
+<h2 id="文件编码"><a href="#文件编码" class="headerlink" title="文件编码"></a>文件编码</h2><ul>
+<li>使用<code>sys.getfilesystemencoding()</code>获取文件系统编码。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">data = sys.getfilesystemencoding()</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'\xf1v.txt'</span>,<span class="string">'w'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	f.write(<span class="string">'hello,bitch'</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>标准输出的编码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">print(sys.stdout.encoding)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改标准输出的编码：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io</span><br><span class="line">sys.stdout = io.TextIOWrapper(sys.stdout.detach(),encoding=<span class="string">'utf8'</span>)</span><br><span class="line">print(sys.stdout.encoding)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改控制台报错：UnicodeEncodeError: ‘gbk’ codec can’t encode character ‘\xf1’ in position 0: illegal multibyte sequence</li>
+</ul>
+<p><code>print()</code>函数有局限，使用前添加<code>sys.stdout = io.TextIOWrapper(sys.stdout.detach(),encoding=&#39;utf8&#39;)</code>，改一下编码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">sys.stdout = io.TextIOWrapper(sys.stdout.detach(),encoding=<span class="string">'utf8'</span>)</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'\xf1v.txt'</span>,<span class="string">'w'</span>) <span class="keyword">as</span> f :</span><br><span class="line">	f.write(<span class="string">'hello,bitch'</span>)</span><br><span class="line"></span><br><span class="line">fp = <span class="string">'F:\\workspace\\python'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">badfilename</span><span class="params">(filename)</span>:</span></span><br><span class="line">    tmp = filename.encode(sys.getfilesystemencoding(),errors=<span class="string">'surrogateescape'</span>)</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line"></span><br><span class="line">names = os.listdir(fp)</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        print(name)</span><br><span class="line">    <span class="keyword">except</span> UnicodeEncodeError:</span><br><span class="line">        print(badfilename(name))</span><br></pre></td></tr></table></figure>
+<h2 id="创建临时文件和文件夹"><a href="#创建临时文件和文件夹" class="headerlink" title="创建临时文件和文件夹"></a>创建临时文件和文件夹</h2><ul>
+<li>创建临时文件</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tempfile <span class="keyword">import</span> TemporaryFile</span><br><span class="line"><span class="keyword">with</span> TemporaryFile(<span class="string">'w+t'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="string">'hello,bitch'</span>)</span><br><span class="line">    f.write(<span class="string">'test'</span>)</span><br><span class="line">    f.seek(<span class="number">12</span>)</span><br><span class="line">    data=f.read()</span><br><span class="line">    print(data)</span><br></pre></td></tr></table></figure>
+<p>使用 <code>seek()</code> 跳转到指定文件位置，文本文件使用 <code>w+t</code>，二进制文件使用 <code>w+b</code>，当临时文件被关闭时，文件已经不存在了。</p>
+<p><code>TemporaryFile()</code> 另外还支持跟内置的 <code>open()</code> 函数一样的参数 :</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> TemporaryFile(<span class="string">'w+t'</span>, encoding=<span class="string">'utf-8'</span>, errors=<span class="string">'ignore'</span>) <span class="keyword">as</span> f:</span><br></pre></td></tr></table></figure>
+<p>使用 <code>NamedTemporaryFile</code> 创建临时文件，关闭时文件也会被删除，使用 <code>delete=False</code> 可防止文件被删除 : <code>NamedTemporaryFile(&#39;w+t&#39;,delete=False)</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tempfile <span class="keyword">import</span> NamedTemporaryFile</span><br><span class="line"><span class="keyword">with</span> NamedTemporaryFile(<span class="string">'w+t'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    print(f.name)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建临时目录：</li>
+</ul>
+<p>在3.2之后有效。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tempfile <span class="keyword">import</span> TemporaryDirectory</span><br><span class="line"><span class="keyword">with</span> TemporaryDirectory() <span class="keyword">as</span> filename:</span><br><span class="line">    print(filename)</span><br></pre></td></tr></table></figure>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><ul>
+<li>序列化至文件中</li>
+</ul>
+<p>使用 <code>pickle.dump()</code> 写入文件中，使用 <code>pickle.load()</code> 从文件中读取内容。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line">data = <span class="string">'hello,bitch'</span></span><br><span class="line">f = open(<span class="string">'a.txt'</span>,<span class="string">'wb'</span>)</span><br><span class="line">pickle.dump(data,f)</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line">f = open(<span class="string">'a.txt'</span>,<span class="string">'rb'</span>)</span><br><span class="line">data = pickle.load(f)</span><br><span class="line">print(data)</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>序列化到<code>string</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line">data = <span class="string">'hello,bitch'</span></span><br><span class="line">bstring = pickle.dumps(data)</span><br><span class="line">print(bstring)</span><br><span class="line"></span><br><span class="line">tstring = pickle.loads(bstring)</span><br><span class="line">print(tstring)</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b&apos;\x80\x03X\x0b\x00\x00\x00hello,bitchq\x00.&apos;</span><br><span class="line">hello,bitch</span><br></pre></td></tr></table></figure>
+<p>和json解析一样的。</p>
+<h2 id="os库"><a href="#os库" class="headerlink" title="os库"></a>os库</h2><p>查看帮助：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">help(os)</span><br><span class="line">help(os.path)</span><br><span class="line">help(os.name)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/25/Java方法签名与方法块/" rel="next" title="Java方法签名与方法块">
+                <i class="fa fa-chevron-left"></i> Java方法签名与方法块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/29/Python文件增删操作/" rel="prev" title="Python文件操作">
+                Python文件操作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="AmoryPepelu">
+            
+              <p class="site-author-name" itemprop="name">AmoryPepelu</p>
+              <p class="site-description motion-element" itemprop="description">我的征途是星辰大海</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/AmoryPepelu" title="GitHub &rarr; https://github.com/AmoryPepelu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://amorypepelu.github.io/2010/01/05/about-me/" title="AboutMe &rarr; https://amorypepelu.github.io/2010/01/05/about-me/"><i class="fa fa-fw fa-globe"></i>AboutMe</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取帮助信息"><span class="nav-number">1.</span> <span class="nav-text">获取帮助信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#py文件的编码"><span class="nav-number">2.</span> <span class="nav-text">py文件的编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读取文本内容"><span class="nav-number">3.</span> <span class="nav-text">读取文本内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入文件"><span class="nav-number">4.</span> <span class="nav-text">写入文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#with语句"><span class="nav-number">5.</span> <span class="nav-text">with语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#被操作文件的编码"><span class="nav-number">6.</span> <span class="nav-text">被操作文件的编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#以不同的行结尾或分隔符完成打印"><span class="nav-number">7.</span> <span class="nav-text">以不同的行结尾或分隔符完成打印</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读写二进制文件"><span class="nav-number">8.</span> <span class="nav-text">读写二进制文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对不存在的文件执行写入操作"><span class="nav-number">9.</span> <span class="nav-text">对不存在的文件执行写入操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在字符上执行IO操作"><span class="nav-number">10.</span> <span class="nav-text">在字符上执行IO操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#path库"><span class="nav-number">11.</span> <span class="nav-text">path库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测文件是否存在"><span class="nav-number">12.</span> <span class="nav-text">检测文件是否存在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录列表"><span class="nav-number">13.</span> <span class="nav-text">目录列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件编码"><span class="nav-number">14.</span> <span class="nav-text">文件编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建临时文件和文件夹"><span class="nav-number">15.</span> <span class="nav-text">创建临时文件和文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化"><span class="nav-number">16.</span> <span class="nav-text">序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#os库"><span class="nav-number">17.</span> <span class="nav-text">os库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AmoryPepelu</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

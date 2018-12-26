@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="写这篇主要是总结一下我使用Jekyll时遇到的坑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用jekyll结合EasyBook搭建个人github主页">
+<meta property="og:url" content="https://amorypepelu.github.io/2016/03/16/jekyll搭配easybook建站/index.html">
+<meta property="og:site_name" content="AmoryPepelu">
+<meta property="og:description" content="写这篇主要是总结一下我使用Jekyll时遇到的坑。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-10-08T13:48:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用jekyll结合EasyBook搭建个人github主页">
+<meta name="twitter:description" content="写这篇主要是总结一下我使用Jekyll时遇到的坑。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://amorypepelu.github.io/2016/03/16/jekyll搭配easybook建站/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>使用jekyll结合EasyBook搭建个人github主页 | AmoryPepelu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AmoryPepelu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/03/16/jekyll搭配easybook建站/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AmoryPepelu">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AmoryPepelu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用jekyll结合EasyBook搭建个人github主页
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-03-16 09:00:13" itemprop="dateCreated datePublished" datetime="2016-03-16T09:00:13+08:00">2016-03-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2016-10-08 21:48:18" itemprop="dateModified" datetime="2016-10-08T21:48:18+08:00">2016-10-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>写这篇主要是总结一下我使用Jekyll时遇到的坑。<br><a id="more"></a></p>
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p>这个没什么好说的，主要就是参考这篇文章：<a href="http://jekyll-windows.juthilo.com/1-ruby-and-devkit/" target="_blank" rel="noopener">Run Jekyll on Windows</a> ，把Ruby环境搭建好。</p>
+<p>然后根据官网的指示安装 Jekyll : <a href="http://jekyllrb.com/docs/quickstart/" title="Title" target="_blank" rel="noopener">Quick-start guide</a> 。</p>
+<p>过程中可能会遇到这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Error fetching https://ruby.taobao.org/:</span><br><span class="line">        SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: ce</span><br><span class="line">rtificate verify failed (https://rubygems-china.oss-cn-hangzhou.aliyuncs.com/spe</span><br><span class="line">cs.4.8.gz)</span><br></pre></td></tr></table></figure>
+<p>或者是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ERROR:  While executing gem ... (Gem::RemoteFetcher::FetchError)</span><br><span class="line">    Errno::ECONNRESET: An existing connection was forcibly closed by the remote</span><br><span class="line">host. - SSL_connect (https://api.rubygems.org/quick/Marshal.4.8/jekyll-3.1.2.gem</span><br><span class="line">spec.rz)</span><br></pre></td></tr></table></figure>
+<p>还有这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR: Could not find a valid gem &apos;jekyll&apos; (&gt;= 0), here is why:</span><br><span class="line">https://github.com/juthilo/run-jekyll-on-windows/issues/34</span><br></pre></td></tr></table></figure>
+<p>的错误，解决办法是依次运行下面的指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://rubygems.org/</span><br><span class="line">$ gem sources -a http://rubygems.org/</span><br><span class="line">$ gem install jekyll</span><br></pre></td></tr></table></figure>
+<p>原因是<code>https://rubygems.org/</code>链接被Greate Wall屏蔽了，除了使用<code>http://rubygems.org/</code> 这个链接外也可以使用中国镜像:<code>https://ruby-china.org</code> (以前的淘宝镜像网站停止服务了，<del>没有测试过</del>)</p>
+<h2 id="使用EasyBook主题"><a href="#使用EasyBook主题" class="headerlink" title="使用EasyBook主题"></a>使用EasyBook主题</h2><p>参考：<a href="https://github.com/laobubu/jekyll-theme-EasyBook/wiki/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97" title="Title" target="_blank" rel="noopener">快速上手指南</a> ，不要下载 Jekyll，直接clone EasyBook的项目就行了。</p>
+<p>再使用jekyll调试的时候，报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Configuration file: E:/code/GitHub/Tonypepelu.github.io/_config.yml</span><br><span class="line">  Dependency Error: Yikes! It looks like you don&apos;t have jekyll-paginate or one</span><br><span class="line">f its dependencies installed. In order to use Jekyll as currently configured, y</span><br><span class="line">u&apos;ll need to install this gem. The full error message from Ruby is: &apos;cannot loa</span><br><span class="line"> such file -- jekyll-paginate&apos; If you run into trouble, you can find helpful re</span><br><span class="line">ources at http://jekyllrb.com/help/!</span><br><span class="line">jekyll 3.1.2 | Error:  jekyll-paginate</span><br></pre></td></tr></table></figure>
+<p>原因：在 <code>_config.yml</code> 文件中使用到了一些东西并没有安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gems:</span><br><span class="line"> - jekyll-paginate</span><br><span class="line"> - jekyll-gist</span><br><span class="line"> - jemoji</span><br></pre></td></tr></table></figure>
+<p>解决办法：依次安装一下就行了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gem install jekyll-gist</span><br><span class="line">gem install jemoji</span><br><span class="line">gem install jekyll-paginate</span><br></pre></td></tr></table></figure>
+<h2 id="添加评论"><a href="#添加评论" class="headerlink" title="添加评论"></a>添加评论</h2><p>EasyBook里面已经集成了多说和<a href="https://disqus.com/home/explore/" title="Title" target="_blank" rel="noopener">disqus</a> 的评论系统，这里采用 disqus的评论系统，到网站去注册一下，把js代码拷贝下来，参考：<a href="http://beiyuu.com/github-pages/" title="Title" target="_blank" rel="noopener">使用Github Pages建独立博客</a> 取得js代码，拷贝到 <code>_includes/comments.html</code>文件中<code>disqus_thread</code> 标签下，覆盖原有内容。</p>
+<h2 id="git提交"><a href="#git提交" class="headerlink" title="git提交"></a>git提交</h2><p>因为我已经在当前git命令中绑定过一个账号了，所以这个站点只能提交到别的账号中，我采用了fork新账号的git page项目然后提交pull request，让另一个账号merge的办法。参考：<a href="https://help.github.com/articles/using-pull-requests/" title="Title" target="_blank" rel="noopener">Using pull requests</a> 。</p>
+<h2 id="Jekyll调试"><a href="#Jekyll调试" class="headerlink" title="Jekyll调试"></a>Jekyll调试</h2><p>依次执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ jekyll build</span><br><span class="line">$ jekyll server</span><br></pre></td></tr></table></figure>
+<h2 id="头像处理"><a href="#头像处理" class="headerlink" title="头像处理"></a>头像处理</h2><p>这里采用 <a href="https://github.com/yaqinking" title="Title" target="_blank" rel="noopener">小笠原</a> 的做法，把图片托管到 <a href="http://imgur.com/" target="_blank" rel="noopener">网站</a> 上，然后在工程配置文件里添加： <code>avatar: &quot;//i.imgur.com/DDbB8QL.jpg?&quot;</code>  ，比较搞笑的是上传图片必须翻墙，不然传到一半进度条还能退回来。</p>
+<h2 id="写作"><a href="#写作" class="headerlink" title="写作"></a>写作</h2><p>文章应该保存在 <code>_posts</code> 文件夹，文件命名格式：<code>YYYY-MM-DD-TITLE.TYPE</code> ，例如：</p>
+<ul>
+<li><p><code>2011-12-31-new-years-eve-is-awesome.md</code></p>
+</li>
+<li><p><code>2012-01-17-hello-world.md</code></p>
+</li>
+</ul>
+<p>这个可以使用批处理来解决，详情见下篇文章。</p>
+<h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><p>跳进一个坑里直到半夜才爬出来，<a href="https://segmentfault.com/q/1010000004584816/a-1020000004586702" title="Title" target="_blank" rel="noopener">用Jekyll创建博客本地正常，上传到GitHub后不能显示文章列表？</a>  这个问题是因为：jekyll 3（github目前的jekyll版本）默认对于认定为”未来”的post，是不生成的，设置date后面的日期稍微提前一点，就可以了，比如设置为昨天。</p>
+<h2 id="文章摘要"><a href="#文章摘要" class="headerlink" title="文章摘要"></a>文章摘要</h2><p>文章第一段换行符之前的都是文章摘要。</p>
+<h2 id="有时标签的格式都正确但文件就是不能解析出来"><a href="#有时标签的格式都正确但文件就是不能解析出来" class="headerlink" title="有时标签的格式都正确但文件就是不能解析出来"></a>有时标签的格式都正确但文件就是不能解析出来</h2><p>检查文件的存储格式是否为utf-8无bom，否则不能成功展示。</p>
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><p>Jekyll build时需要Python支持，但Python的版本不能太高，2.7正好。</p>
+<h2 id="定制显示字体大小"><a href="#定制显示字体大小" class="headerlink" title="定制显示字体大小"></a>定制显示字体大小</h2><p>在<code>css/main.scss</code> 文件中修改全局的字体格式。</p>
+<h2 id="修改首页展示的字体大小，间距"><a href="#修改首页展示的字体大小，间距" class="headerlink" title="修改首页展示的字体大小，间距"></a>修改首页展示的字体大小，间距</h2><p>在<code>_sass/_home.scss</code> 文件中，找到<code>post-excerpt</code> : 摘抄，修改这里的样式就会改变首页展示的字体。</p>
+<p>字体大小 ： <code>font-size: $small-font-size;</code></p>
+<p>行距 ：<code>line-height: 1.75;</code></p>
+<p>设置代码缩进：在<code>_base.scss</code>中的<code>pre</code>块，添加<code>tab-size: 4;</code></p>
+<p>在<code>main.css</code>文件中<code>code</code>块设置代码行距</p>
+<h2 id="中文文件名支持"><a href="#中文文件名支持" class="headerlink" title="中文文件名支持"></a>中文文件名支持</h2><p>用中文作为文件名的时候，会出现文章找不到的情况，解决办法是：</p>
+<p>修改<code>安装目录\Ruby22-x64\lib\ruby\2.2.0\webrick\httpservlet</code>下的<code>filehandler.rb</code>文件</p>
+<p>找到下列两处，添加一句（<code>+</code>的一行为添加部分）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">path = req.path_info.dup.force_encoding(Encoding.find(&quot;filesystem&quot;))</span><br><span class="line">+ path.force_encoding(&quot;UTF-8&quot;) # 加入编码</span><br><span class="line">if trailing_pathsep?(req.path_info)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">break if base == &quot;/&quot;</span><br><span class="line">+ base.force_encoding(&quot;UTF-8&quot;) #加入編碼</span><br><span class="line">break unless File.directory?(File.expand_path(res.filename + base))</span><br></pre></td></tr></table></figure>
+<p>在<code>_config.yml</code>中添加:<code>encoding: &quot;utf-8&quot;</code>，因为默认就是utf-8，所以这个要不要都行。</p>
+<p>重启jekyll server</p>
+<p>转自<a href="http://chiyiw.com/2016/03/20/jekyll-%E6%9C%AC%E5%9C%B0%E8%B0%83%E8%AF%95%E6%96%87%E4%BB%B6%E5%90%8D%E4%B8%AD%E6%96%87%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3.html" target="_blank" rel="noopener">jekyll 本地调试文件名中文错误解决</a></p>
+<h2 id="category排序"><a href="#category排序" class="headerlink" title="category排序"></a>category排序</h2><p>在<code>category.html</code>中修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% assign category = categories | split:&apos;,&apos; | sort | reverse %&#125;</span><br></pre></td></tr></table></figure>
+<p>这个是逆序，添加了<code>reverse</code>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/15/EasyBook-set-excerpt-font-size/" rel="next" title="EasyBook设置首页展示">
+                <i class="fa fa-chevron-left"></i> EasyBook设置首页展示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/30/横竖屏切换问题/" rel="prev" title="微信支付横竖屏切换问题">
+                微信支付横竖屏切换问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="AmoryPepelu">
+            
+              <p class="site-author-name" itemprop="name">AmoryPepelu</p>
+              <p class="site-description motion-element" itemprop="description">我的征途是星辰大海</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/AmoryPepelu" title="GitHub &rarr; https://github.com/AmoryPepelu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://amorypepelu.github.io/2010/01/05/about-me/" title="AboutMe &rarr; https://amorypepelu.github.io/2010/01/05/about-me/"><i class="fa fa-fw fa-globe"></i>AboutMe</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装环境"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用EasyBook主题"><span class="nav-number">2.</span> <span class="nav-text">使用EasyBook主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加评论"><span class="nav-number">3.</span> <span class="nav-text">添加评论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git提交"><span class="nav-number">4.</span> <span class="nav-text">git提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jekyll调试"><span class="nav-number">5.</span> <span class="nav-text">Jekyll调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#头像处理"><span class="nav-number">6.</span> <span class="nav-text">头像处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写作"><span class="nav-number">7.</span> <span class="nav-text">写作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布"><span class="nav-number">8.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文章摘要"><span class="nav-number">9.</span> <span class="nav-text">文章摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有时标签的格式都正确但文件就是不能解析出来"><span class="nav-number">10.</span> <span class="nav-text">有时标签的格式都正确但文件就是不能解析出来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python"><span class="nav-number">11.</span> <span class="nav-text">Python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定制显示字体大小"><span class="nav-number">12.</span> <span class="nav-text">定制显示字体大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改首页展示的字体大小，间距"><span class="nav-number">13.</span> <span class="nav-text">修改首页展示的字体大小，间距</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文文件名支持"><span class="nav-number">14.</span> <span class="nav-text">中文文件名支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#category排序"><span class="nav-number">15.</span> <span class="nav-text">category排序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AmoryPepelu</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

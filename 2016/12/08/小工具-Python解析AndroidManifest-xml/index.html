@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目标：解析AndroidManifest.xml，取得其中四大组件的名字，组成一个列表。">
+<meta name="keywords" content="Tools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小工具-Python解析AndroidManifest.xml">
+<meta property="og:url" content="https://amorypepelu.github.io/2016/12/08/小工具-Python解析AndroidManifest-xml/index.html">
+<meta property="og:site_name" content="AmoryPepelu">
+<meta property="og:description" content="目标：解析AndroidManifest.xml，取得其中四大组件的名字，组成一个列表。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2016-12-08T13:32:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小工具-Python解析AndroidManifest.xml">
+<meta name="twitter:description" content="目标：解析AndroidManifest.xml，取得其中四大组件的名字，组成一个列表。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://amorypepelu.github.io/2016/12/08/小工具-Python解析AndroidManifest-xml/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>小工具-Python解析AndroidManifest.xml | AmoryPepelu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AmoryPepelu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/12/08/小工具-Python解析AndroidManifest-xml/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="AmoryPepelu">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AmoryPepelu">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小工具-Python解析AndroidManifest.xml
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-12-08 21:29:24 / 修改时间：21:32:28" itemprop="dateCreated datePublished" datetime="2016-12-08T21:29:24+08:00">2016-12-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>目标：解析AndroidManifest.xml，取得其中四大组件的名字，组成一个列表。</p>
+<a id="more"></a>
+<h2 id="把xml文件解析成xml节点形式："><a href="#把xml文件解析成xml节点形式：" class="headerlink" title="把xml文件解析成xml节点形式："></a>把xml文件解析成xml节点形式：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> parse</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getElementTree</span><span class="params">(filePath)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(filePath, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        doc = parse(f)</span><br><span class="line">    <span class="keyword">return</span> doc</span><br></pre></td></tr></table></figure>
+<p>使用 <code>parse</code> 方法。</p>
+<h2 id="读取全部组件名"><a href="#读取全部组件名" class="headerlink" title="读取全部组件名"></a>读取全部组件名</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSourceActList</span><span class="params">(doc)</span>:</span></span><br><span class="line">    nodelist = doc.findall(<span class="string">'application/activity'</span>)</span><br><span class="line">    act_list = []</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</span><br><span class="line">        act_list.append(node.get(<span class="string">'&#123;http://schemas.android.com/apk/res/android&#125;name'</span>))</span><br><span class="line">    <span class="keyword">return</span> act_list</span><br></pre></td></tr></table></figure>
+<p>先用findall方法获取全部activity节点，根节点是manifest，可以用<code>&#39;application/activity&#39;</code>取到次级节点的次级节点。</p>
+<p>然后用get方法读取activity里面的属性，因为android使用的是 <code>http://schemas.android.com/apk/res/android</code>的命名空间：<code>xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</code>，所以要把<code>android</code>替换成<code>http://schemas.android.com/apk/res/android</code>。</p>
+<p>读取service使用：doc.findall(‘application/service’)<br>读取receiver使用：doc.findall(‘application/receiver’)<br>读取provider使用：doc.findall(‘application/provider’)</p>
+<h2 id="与目标文件比对"><a href="#与目标文件比对" class="headerlink" title="与目标文件比对"></a>与目标文件比对</h2><p>因为目标文件并不是严格意义上的xml文件，多以不能以xml的形式读取，简单暴力的方法是分成行全部读取，然后做字符串分割。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(to_doc_file_path, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> to_file:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> to_file:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'android:name'</span> <span class="keyword">in</span> line <span class="keyword">and</span> <span class="string">'uses-permission'</span> <span class="keyword">not</span> <span class="keyword">in</span> line:</span><br><span class="line">            to_lists.append(line)</span><br><span class="line">to_lists_real = []</span><br><span class="line"><span class="keyword">for</span> ls <span class="keyword">in</span> to_lists:</span><br><span class="line">    to_lists_real.append(ls[ls.index(<span class="string">'"'</span>) + <span class="number">1</span>:ls.rfind(<span class="string">'"'</span>):])</span><br></pre></td></tr></table></figure>
+<p><code>if &#39;android:name&#39; in line and &#39;uses-permission&#39; not in line</code>这里做个判断，把权限隔离。</p>
+<p><code>ls[ls.index(&#39;&quot;&#39;) + 1:ls.rfind(&#39;&quot;&#39;):]</code>这里做字符串分片，只读取<code>&quot;&quot;</code>符号内的字符串。</p>
+<p>然后就是两者的比对了，同样暴力操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> source_line <span class="keyword">in</span> source_lists:</span><br><span class="line">    <span class="keyword">if</span> source_line <span class="keyword">not</span> <span class="keyword">in</span> to_lists_real:</span><br><span class="line">        output_file.write(source_line + <span class="string">"\n"</span>)</span><br></pre></td></tr></table></figure>
+<p>把不在其中的组件名写入输出文件中。</p>
+<p>全部代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># code : utf8</span></span><br><span class="line"><span class="keyword">from</span> xml.etree.ElementTree <span class="keyword">import</span> parse</span><br><span class="line"></span><br><span class="line">source_filePath = <span class="string">r'F:\temp\xml\AndroidManifest.xml'</span></span><br><span class="line">to_doc_file_path = <span class="string">r'F:\temp\xml\a.xml'</span></span><br><span class="line">output_file_path = <span class="string">r'F:\Project\CheckManifestSources\output.txt'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getElementTree</span><span class="params">(filePath)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(filePath, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        doc = parse(f)</span><br><span class="line">    <span class="keyword">return</span> doc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSourceActList</span><span class="params">(doc)</span>:</span></span><br><span class="line">    nodelist = doc.findall(<span class="string">'application/activity'</span>)</span><br><span class="line">    act_list = []</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</span><br><span class="line">        act_list.append(node.get(<span class="string">'&#123;http://schemas.android.com/apk/res/android&#125;name'</span>))</span><br><span class="line">    <span class="keyword">return</span> act_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSourceReceiverList</span><span class="params">(doc)</span>:</span></span><br><span class="line">    nodelist = doc.findall(<span class="string">'application/receiver'</span>)</span><br><span class="line">    receiverList = []</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</span><br><span class="line">        receiverList.append(node.get(<span class="string">'&#123;http://schemas.android.com/apk/res/android&#125;name'</span>))</span><br><span class="line">    <span class="keyword">return</span> receiverList</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSourceServiceList</span><span class="params">(doc)</span>:</span></span><br><span class="line">    nodelist = doc.findall(<span class="string">'application/service'</span>)</span><br><span class="line">    serviceList = []</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</span><br><span class="line">        serviceList.append(node.get(<span class="string">'&#123;http://schemas.android.com/apk/res/android&#125;name'</span>))</span><br><span class="line">    <span class="keyword">return</span> serviceList</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSourceProviderList</span><span class="params">(doc)</span>:</span></span><br><span class="line">    nodelist = doc.findall(<span class="string">'application/provider'</span>)</span><br><span class="line">    providerList = []</span><br><span class="line">    <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</span><br><span class="line">        providerList.append(node.get(<span class="string">'&#123;http://schemas.android.com/apk/res/android&#125;name'</span>))</span><br><span class="line">    <span class="keyword">return</span> providerList</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    source_doc = getElementTree(source_filePath)</span><br><span class="line">    source_lists = []</span><br><span class="line">    source_lists.extend(getSourceActList(source_doc))</span><br><span class="line">    source_lists.extend(getSourceReceiverList(source_doc))</span><br><span class="line">    source_lists.extend(getSourceProviderList(source_doc))</span><br><span class="line">    source_lists.extend(getSourceServiceList(source_doc))</span><br><span class="line">    to_lists = []</span><br><span class="line">    <span class="keyword">with</span> open(to_doc_file_path, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> to_file:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> to_file:</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'android:name'</span> <span class="keyword">in</span> line <span class="keyword">and</span> <span class="string">'uses-permission'</span> <span class="keyword">not</span> <span class="keyword">in</span> line:</span><br><span class="line">                to_lists.append(line)</span><br><span class="line">    to_lists_real = []</span><br><span class="line">    <span class="keyword">for</span> ls <span class="keyword">in</span> to_lists:</span><br><span class="line">        to_lists_real.append(ls[ls.index(<span class="string">'"'</span>) + <span class="number">1</span>:ls.rfind(<span class="string">'"'</span>):])</span><br><span class="line">    <span class="keyword">with</span> open(output_file_path, <span class="string">'tw'</span>, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> output_file:</span><br><span class="line">        <span class="keyword">for</span> source_line <span class="keyword">in</span> source_lists:</span><br><span class="line">            <span class="keyword">if</span> source_line <span class="keyword">not</span> <span class="keyword">in</span> to_lists_real:</span><br><span class="line">                output_file.write(source_line + <span class="string">"\n"</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tools/" rel="tag"># Tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/27/Java泛型-PECS/" rel="next" title="Java泛型-PECS">
+                <i class="fa fa-chevron-left"></i> Java泛型-PECS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/27/2016-年终总结/" rel="prev" title="2016-年终总结">
+                2016-年终总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="AmoryPepelu">
+            
+              <p class="site-author-name" itemprop="name">AmoryPepelu</p>
+              <p class="site-description motion-element" itemprop="description">我的征途是星辰大海</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/AmoryPepelu" title="GitHub &rarr; https://github.com/AmoryPepelu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://amorypepelu.github.io/2010/01/05/about-me/" title="AboutMe &rarr; https://amorypepelu.github.io/2010/01/05/about-me/"><i class="fa fa-fw fa-globe"></i>AboutMe</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#把xml文件解析成xml节点形式："><span class="nav-number">1.</span> <span class="nav-text">把xml文件解析成xml节点形式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读取全部组件名"><span class="nav-number">2.</span> <span class="nav-text">读取全部组件名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与目标文件比对"><span class="nav-number">3.</span> <span class="nav-text">与目标文件比对</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AmoryPepelu</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

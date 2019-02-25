@@ -351,6 +351,351 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/02/24/ffmpeg-deprecated-方法替换/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/02/24/ffmpeg-deprecated-方法替换/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">ffmpeg deprecated 方法替换</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-24 22:02:03" itemprop="dateCreated datePublished" datetime="2019-02-24T22:02:03+08:00">2019-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-02-25 22:18:22" itemprop="dateModified" datetime="2019-02-25T22:18:22+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/音视频/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>FFmpeg 3.4.x 中废弃了老板本中的部分函数，这里总结下替换方法。</p>
+<h2 id="AVCodecContext-获取"><a href="#AVCodecContext-获取" class="headerlink" title="AVCodecContext 获取"></a>AVCodecContext 获取</h2><p>deprecated ：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AVCodecContext *pCodecCtx;</span><br><span class="line">AVFormatContext *pFormatCtx = avformat_alloc_context();</span><br><span class="line"><span class="comment">//...some code</span></span><br><span class="line">pCodecCtx = pFormatCtx-&gt;streams[i]-&gt;codec;<span class="comment">//deprecated</span></span><br></pre></td></tr></table></figure>
+<p>替换:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AVFormatContext *pFormatCtx = avformat_alloc_context();</span><br><span class="line"><span class="comment">//...some code</span></span><br><span class="line">AVCodecParameters *avCodecParameters = pFormatCtx-&gt;streams[videoStream]-&gt;codecpar;</span><br><span class="line">AVCodecContext *pCodecCtx = avcodec_alloc_context3(<span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">if</span> (!pCodecCtx) &#123;</span><br><span class="line">    LOGE(<span class="string">"alloc avcodec fail."</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line">ret = avcodec_parameters_to_context(pCodecCtx, avCodecParameters);</span><br><span class="line"><span class="keyword">if</span> (ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    LOGE(<span class="string">"avcodec_parameters_to_context fail."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="avcodec-decode-video2"><a href="#avcodec-decode-video2" class="headerlink" title="avcodec_decode_video2()"></a>avcodec_decode_video2()</h2><p>视频读取 老版本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> frameFinished;</span><br><span class="line">AVPacket packet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(av_read_frame(pFormatCtx, &amp;packet)&gt;=<span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">//判断是否为视频流</span></span><br><span class="line">    <span class="keyword">if</span>(packet.stream_index==videoStream) &#123;</span><br><span class="line">        <span class="comment">//对该帧进行解码</span></span><br><span class="line">        avcodec_decode_video2(pCodecCtx, pFrame, &amp;frameFinished, &amp;packet);</span><br><span class="line">        <span class="keyword">if</span> (frameFinished) &#123;</span><br><span class="line">            <span class="comment">// lock native window</span></span><br><span class="line">            ANativeWindow_lock(nativeWindow, &amp;windowBuffer, <span class="number">0</span>);</span><br><span class="line">            <span class="comment">// 格式转换</span></span><br><span class="line">            sws_scale(sws_ctx, (<span class="keyword">uint8_t</span> <span class="keyword">const</span> * <span class="keyword">const</span> *)pFrame-&gt;data,</span><br><span class="line">                      pFrame-&gt;linesize, <span class="number">0</span>, pCodecCtx-&gt;height,</span><br><span class="line">                      pFrameRGBA-&gt;data, pFrameRGBA-&gt;linesize);</span><br><span class="line">            <span class="comment">// 获取stride</span></span><br><span class="line">            <span class="keyword">uint8_t</span> * dst = windowBuffer.bits;</span><br><span class="line">            <span class="keyword">int</span> dstStride = windowBuffer.stride * <span class="number">4</span>;</span><br><span class="line">            <span class="keyword">uint8_t</span> * src = pFrameRGBA-&gt;data[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">int</span> srcStride = pFrameRGBA-&gt;linesize[<span class="number">0</span>];</span><br><span class="line">            <span class="comment">// 由于window的stride和帧的stride不同,因此需要逐行复制</span></span><br><span class="line">            <span class="keyword">int</span> h;</span><br><span class="line">            <span class="keyword">for</span> (h = <span class="number">0</span>; h &lt; videoHeight; h++) &#123;</span><br><span class="line">                <span class="built_in">memcpy</span>(dst + h * dstStride, src + h * srcStride, (<span class="keyword">size_t</span>) srcStride);</span><br><span class="line">            &#125;</span><br><span class="line">            ANativeWindow_unlockAndPost(nativeWindow);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//延迟等待</span></span><br><span class="line">        usleep((<span class="keyword">unsigned</span> <span class="keyword">long</span>) (<span class="number">1000</span> * <span class="number">40</span> * play_rate));</span><br><span class="line">    &#125;</span><br><span class="line">    av_packet_unref(&amp;packet);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>替代方法:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">AVPacket *packet = av_packet_alloc();</span><br><span class="line"><span class="keyword">while</span> (av_read_frame(pFormatCtx, packet) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">//判断 Packet （音视频压缩数据） 是否是视频流</span></span><br><span class="line">    <span class="keyword">if</span> (packet-&gt;stream_index == videoStream) &#123;</span><br><span class="line">        <span class="comment">//解码视频帧 : 老版本使用</span></span><br><span class="line">        <span class="comment">//avcodec_decode_video2(pCodecCtx, pFrame, &amp;frameFinished, &amp;packet);</span></span><br><span class="line"></span><br><span class="line">        ret = avcodec_send_packet(pCodecCtx, packet);</span><br><span class="line">        <span class="keyword">if</span> (ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            LOGE(<span class="string">"video Error sending a packet for decoding."</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (ret &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            ret = avcodec_receive_frame(pCodecCtx, pFrame);</span><br><span class="line">            <span class="keyword">if</span> (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                LOGE(<span class="string">"Error during decoding\n"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//锁住 NativeWindow 缓冲区</span></span><br><span class="line">            ANativeWindow_lock(nativeWindow, &amp;windowBuffer, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//格式转换</span></span><br><span class="line">            sws_scale(swsContext, (<span class="keyword">uint8_t</span> <span class="keyword">const</span> *<span class="keyword">const</span> *) pFrame-&gt;data,</span><br><span class="line">                      pFrame-&gt;linesize, <span class="number">0</span>, pCodecCtx-&gt;height,</span><br><span class="line">                      pFrameRGBA-&gt;data, pFrameRGBA-&gt;linesize);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//获取 stride</span></span><br><span class="line">            <span class="keyword">uint8_t</span> *dst = windowBuffer.bits;</span><br><span class="line">            <span class="keyword">int</span> dstStride = windowBuffer.stride * <span class="number">4</span>;</span><br><span class="line">            <span class="keyword">uint8_t</span> *src = (<span class="keyword">uint8_t</span> *) (pFrameRGBA-&gt;data[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">int</span> srcStride = pFrameRGBA-&gt;linesize[<span class="number">0</span>];</span><br><span class="line">            <span class="comment">//由于窗口的stride和帧的stride不同，因此需要逐行复制</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; videoHeight; h++) &#123;</span><br><span class="line">                <span class="built_in">memcpy</span>(dst + h * dstStride, src + h * srcStride, (<span class="keyword">size_t</span>) srcStride);</span><br><span class="line">            &#125;</span><br><span class="line">            ANativeWindow_unlockAndPost(nativeWindow);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    av_packet_unref(packet);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="avcodec-decode-audio4"><a href="#avcodec-decode-audio4" class="headerlink" title="avcodec_decode_audio4()"></a>avcodec_decode_audio4()</h2><p>老方法 :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (av_read_frame(avFormatCtx, &amp;packet) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">   <span class="keyword">int</span> frameFinished = <span class="number">0</span>;</span><br><span class="line">   <span class="comment">// Is this a packet from the audio stream?</span></span><br><span class="line">   <span class="keyword">if</span> (packet.stream_index == audioStream) &#123;</span><br><span class="line">       avcodec_decode_audio4(avCodecCtx, avFrame, &amp;frameFinished, &amp;packet);</span><br><span class="line"></span><br><span class="line">       <span class="comment">//解码完一帧数据</span></span><br><span class="line">       <span class="keyword">if</span> (frameFinished) &#123;</span><br><span class="line">           <span class="comment">// data_size为音频数据所占的字节数</span></span><br><span class="line">           <span class="keyword">int</span> data_size = av_samples_get_buffer_size(</span><br><span class="line">                   avFrame-&gt;linesize, avCodecCtx-&gt;channels,</span><br><span class="line">                   avFrame-&gt;nb_samples, avCodecCtx-&gt;sample_fmt, <span class="number">1</span>);</span><br><span class="line">           LOGD(<span class="string">"&gt;&gt; getPcm data_size=%d"</span>, data_size);</span><br><span class="line">           <span class="comment">// 这里内存再分配可能存在问题</span></span><br><span class="line">           <span class="keyword">if</span> (data_size &gt; outputBufferSize) &#123;</span><br><span class="line">               outputBufferSize = (<span class="keyword">size_t</span>) data_size;</span><br><span class="line">               outputBuffer = (<span class="keyword">uint8_t</span> *) <span class="built_in">realloc</span>(outputBuffer,</span><br><span class="line">                                                  <span class="keyword">sizeof</span>(<span class="keyword">uint8_t</span>) * outputBufferSize);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 音频格式转换</span></span><br><span class="line">           swr_convert(swrCtx, &amp;outputBuffer, avFrame-&gt;nb_samples,</span><br><span class="line">                       (<span class="keyword">uint8_t</span> <span class="keyword">const</span> **) (avFrame-&gt;extended_data),</span><br><span class="line">                       avFrame-&gt;nb_samples);</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 返回pcm数据</span></span><br><span class="line">           *pcm = outputBuffer;</span><br><span class="line">           *pcmSize = (<span class="keyword">size_t</span>) data_size;</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>新方法 : </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">Packet *packet;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取PCM数据, 自动回调获取</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getPCM</span><span class="params">(<span class="keyword">void</span> **pcm, <span class="keyword">size_t</span> *pcmSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//LOGI("getPCM.\n");</span></span><br><span class="line">    packet = av_packet_alloc();</span><br><span class="line">    <span class="keyword">while</span> (av_read_frame(avFormatCtx, packet) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (packet-&gt;stream_index == audioStream) &#123;</span><br><span class="line">            ret = avcodec_send_packet(avCodecCtx, packet);</span><br><span class="line">            <span class="keyword">if</span> (ret &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                LOGE(<span class="string">"audio Error sending a packet for decoding."</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span> (avcodec_receive_frame(avCodecCtx, avFrame) == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// data_size为音频数据所占的字节数</span></span><br><span class="line">                <span class="keyword">int</span> data_size = av_samples_get_buffer_size(</span><br><span class="line">                        avFrame-&gt;linesize, avCodecCtx-&gt;channels,</span><br><span class="line">                        avFrame-&gt;nb_samples, avCodecCtx-&gt;sample_fmt, <span class="number">1</span>);</span><br><span class="line">                <span class="comment">// LOGI("&gt;&gt; while getPcm data_size=%d\n", data_size);</span></span><br><span class="line">                <span class="comment">// 内存再分配</span></span><br><span class="line">                <span class="keyword">if</span> (data_size &gt; outputBufferSize) &#123;</span><br><span class="line">                    outputBufferSize = (<span class="keyword">size_t</span>) data_size;</span><br><span class="line">                    outputBuffer = <span class="built_in">realloc</span>(outputBuffer, <span class="keyword">sizeof</span>(<span class="keyword">uint8_t</span>) * outputBufferSize);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 音频格式转换</span></span><br><span class="line">                swr_convert(swrCtx, &amp;outputBuffer, avFrame-&gt;nb_samples,</span><br><span class="line">                            (<span class="keyword">uint8_t</span> <span class="keyword">const</span> **) (avFrame-&gt;extended_data),</span><br><span class="line">                            avFrame-&gt;nb_samples);</span><br><span class="line">                <span class="comment">// 返回pcm数据</span></span><br><span class="line">                *pcm = outputBuffer;</span><br><span class="line">                *pcmSize = (<span class="keyword">size_t</span>) data_size;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/01/16/path画圆角矩形/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/01/16/path画圆角矩形/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">path画圆角矩形</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-16 18:02:19 / 修改时间：18:06:43" itemprop="dateCreated datePublished" datetime="2019-01-16T18:02:19+08:00">2019-01-16</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>使用 <code>path.addRoundRect()</code> 方法，基本使用是这些，可以做一些深度的定制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class RoundRectView : View &#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">private</span> val roundRectPath = Path()</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">private</span> val pathRect = RectF()</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">private</span> val pathPaint = Paint()</span><br><span class="line"></span><br><span class="line">​    init &#123;</span><br><span class="line"></span><br><span class="line">​        pathPaint.isAntiAlias = <span class="keyword">true</span></span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="meta">@JvmOverloads</span></span><br><span class="line"></span><br><span class="line">​    constructor(context: Context, attrs: AttributeSet? = <span class="keyword">null</span>, defStyleAttr: Int = <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">​            : <span class="keyword">super</span>(context, attrs, defStyleAttr)</span><br><span class="line"></span><br><span class="line">​    <span class="function">override fun <span class="title">onDraw</span><span class="params">(canvas: Canvas?)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">super</span>.onDraw(canvas)</span><br><span class="line"></span><br><span class="line">​        pathRect.set(width / <span class="number">2f</span>, <span class="number">0f</span>, width / <span class="number">2f</span> + <span class="number">100</span>, height.toFloat())</span><br><span class="line"></span><br><span class="line">​        roundRectPath.reset()</span><br><span class="line"></span><br><span class="line">​        roundRectPath.addRoundRect(pathRect, Utils.dip2px(context, <span class="number">10f</span>).toFloat(), Utils.dip2px(context, <span class="number">10f</span>).toFloat(), Path.Direction.CW)</span><br><span class="line"></span><br><span class="line">​        roundRectPath.fillType = Path.FillType.WINDING</span><br><span class="line"></span><br><span class="line">​        pathPaint.style = Paint.Style.FILL</span><br><span class="line"></span><br><span class="line">​        pathPaint.color = ActivityCompat.getColor(context, R.color.color_FD5056)</span><br><span class="line"></span><br><span class="line">​        canvas?.drawPath(roundRectPath, pathPaint)</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2018/12/25/kotlin中的序列化/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1747,354 +2092,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2017/01/07/java-String-valueOf-数组向上转型为Object/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/01/07/java-String-valueOf-数组向上转型为Object/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">java-String-valueOf-数组向上转型为Object</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-01-07 22:58:55" itemprop="dateCreated datePublished" datetime="2017-01-07T22:58:55+08:00">2017-01-07</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2017-01-08 09:42:52" itemprop="dateModified" datetime="2017-01-08T09:42:52+08:00">2017-01-08</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>将一串String转为byte数组，然后再用String.valueOf()转回字符串。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">testValueOf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String s = <span class="string">"hello,bitch"</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] bytes = s.getBytes(Charset.forName(<span class="string">"UTF-8"</span>));</span><br><span class="line">    System.out.println(String.valueOf(bytes));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>好像是对的，编译器也没有报错，运行一下，输出：<code>[B@28d93b30</code>。嗯，这分明是个对象！而且toString也无法奈何它。String哪里去了呢？</p>
-<p>看下String.valueOf()这个方法:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(Object obj)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[])</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> data[], <span class="keyword">int</span> offset, <span class="keyword">int</span> count)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">char</span> c)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">long</span> l)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">float</span> f)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">valueOf</span><span class="params">(<span class="keyword">double</span> d)</span></span></span><br></pre></td></tr></table></figure>
-<p>仔细一看，是没有<code>valueOf(byte[] bytes)</code>的，那么就是向上转型了，<code>byte[]</code>会转成什么呢？会转成<code>Object</code>。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/01/07/java-String-valueOf-数组向上转型为Object/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2017/01/03/java-静态方法不存在任何静态分派机制/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/01/03/java-静态方法不存在任何静态分派机制/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">静态方法不存在任何静态分派机制</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-01-03 20:14:16 / 修改时间：20:15:50" itemprop="dateCreated datePublished" datetime="2017-01-03T20:14:16+08:00">2017-01-03</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"woof"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Basenji</span> <span class="keyword">extends</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//do nothing</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Dog dog = <span class="keyword">new</span> Dog();</span><br><span class="line">dog.bark();</span><br><span class="line"></span><br><span class="line">Dog nipper = <span class="keyword">new</span> Basenji();</span><br><span class="line">nipper.bark();</span><br><span class="line"></span><br><span class="line">Basenji basenji = <span class="keyword">new</span> Basenji();</span><br><span class="line">basenji.bark();</span><br></pre></td></tr></table></figure>
-<p>输出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">woof</span><br><span class="line">woof</span><br></pre></td></tr></table></figure>
-<p>静态方法不存在任何静态分派机制，当一个程序调用静态方法、字段时，要被调用的方法、字段都是在编译时刻被选定的，而这种选定是基于修饰符的编译期类型而做出的，修饰符的编译期类型就是我们给出的方法调用表达式原点左边的名字。</p>
-<p>不要用类实例来调用静态方法。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2144,7 +2141,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2169,7 +2166,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2206,7 +2205,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

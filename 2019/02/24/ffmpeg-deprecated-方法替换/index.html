@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="FFmpeg 3.4.x 中废弃了老板本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
+  <meta name="description" content="FFmpeg 3.4.x 中废弃了老版本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
 <meta name="keywords" content="ffmpeg">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ffmpeg deprecated 方法替换">
 <meta property="og:url" content="https://amorypepelu.github.io/2019/02/24/ffmpeg-deprecated-方法替换/index.html">
 <meta property="og:site_name" content="BlackNeko">
-<meta property="og:description" content="FFmpeg 3.4.x 中废弃了老板本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
+<meta property="og:description" content="FFmpeg 3.4.x 中废弃了老版本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-25T14:18:22.161Z">
+<meta property="og:updated_time" content="2019-02-25T15:31:36.865Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ffmpeg deprecated 方法替换">
-<meta name="twitter:description" content="FFmpeg 3.4.x 中废弃了老板本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
+<meta name="twitter:description" content="FFmpeg 3.4.x 中废弃了老版本中的部分函数，这里总结下替换方法。 AVCodecContext 获取deprecated ： 1234AVCodecContext *pCodecCtx;AVFormatContext *pFormatCtx = avformat_alloc_context();//...some codepCodecCtx = pFormatCtx-&amp;gt;stream">
 
 
 
@@ -411,7 +411,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-02-25 22:18:22" itemprop="dateModified" datetime="2019-02-25T22:18:22+08:00">2019-02-25</time>
+                <time title="修改时间：2019-02-25 23:31:36" itemprop="dateModified" datetime="2019-02-25T23:31:36+08:00">2019-02-25</time>
               
             
           </span>
@@ -462,7 +462,7 @@
       
 
       
-        <p>FFmpeg 3.4.x 中废弃了老板本中的部分函数，这里总结下替换方法。</p>
+        <p>FFmpeg 3.4.x 中废弃了老版本中的部分函数，这里总结下替换方法。</p>
 <h2 id="AVCodecContext-获取"><a href="#AVCodecContext-获取" class="headerlink" title="AVCodecContext 获取"></a>AVCodecContext 获取</h2><p>deprecated ：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AVCodecContext *pCodecCtx;</span><br><span class="line">AVFormatContext *pFormatCtx = avformat_alloc_context();</span><br><span class="line"><span class="comment">//...some code</span></span><br><span class="line">pCodecCtx = pFormatCtx-&gt;streams[i]-&gt;codec;<span class="comment">//deprecated</span></span><br></pre></td></tr></table></figure>
 <p>替换:</p>

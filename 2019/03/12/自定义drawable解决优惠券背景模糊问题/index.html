@@ -119,9 +119,10 @@
 <meta property="og:image" content="https://amorypepelu.github.io/images/ticket_drawable_1.jpg">
 <meta property="og:image" content="https://amorypepelu.github.io/images/ticket_drawable_2.jpg">
 <meta property="og:image" content="https://amorypepelu.github.io/images/td3.png">
+<meta property="og:image" content="https://amorypepelu.github.io/images/td6.jpg">
 <meta property="og:image" content="https://amorypepelu.github.io/images/td4.jpg">
 <meta property="og:image" content="https://amorypepelu.github.io/images/td5.jpg">
-<meta property="og:updated_time" content="2019-03-14T10:31:41.554Z">
+<meta property="og:updated_time" content="2019-03-14T10:40:35.434Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义drawable解决优惠券背景模糊问题">
 <meta name="twitter:description" content="需要实现的效果:  最初是用ui给的一张切图做背景，后来优惠券的文字提示变长图片拉伸改用.9图，背景图线条1像素，半圆还是会很模糊，原图只有一些圆和线还是比较规则的，因此想自己画图来解决。 分析 关键问题在于画线，复杂线条使用path实现 实现步骤 画边框 画左右半圆 画四个角的四分之一圆    画边框drawable 内部使用 bounds 获取控件大小，设置一些基本属性：线条颜色、宽度，就可以">
@@ -417,7 +418,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-03-14 18:31:41" itemprop="dateModified" datetime="2019-03-14T18:31:41+08:00">2019-03-14</time>
+                <time title="修改时间：2019-03-14 18:40:35" itemprop="dateModified" datetime="2019-03-14T18:40:35+08:00">2019-03-14</time>
               
             
           </span>
@@ -486,6 +487,8 @@
 <p>内部使用 <code>padding</code> 来控制边框空白处间距</p>
 <p>效果：</p>
 <p><img src="/images/ticket_drawable_2.jpg" alt=""></p>
+<p>边框线宽度画不全，需要向内坍缩</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//向内缩一条线的宽度，防止边线宽度画不全</span></span><br><span class="line"><span class="keyword">val</span> left = bounds.left + lineWidth</span><br><span class="line"><span class="keyword">val</span> top = bounds.top + lineWidth</span><br><span class="line"><span class="keyword">val</span> right = bounds.right - lineWidth</span><br><span class="line"><span class="keyword">val</span> bottom = bounds.bottom - lineWidth</span><br></pre></td></tr></table></figure>
 <h3 id="画左右半圆"><a href="#画左右半圆" class="headerlink" title="画左右半圆"></a>画左右半圆</h3><p>使用 <code>path.arcTo()</code> 方法画圆弧</p>
 <p>参数介绍:</p>
 <ul>
@@ -502,6 +505,8 @@
 <p>把半圆添加进path中，可以使用 <code>addArc()</code> 和 <code>arcTo()</code> ，<code>arcTo()</code> 最后一个参数可以把path坐标移动到圆弧终止位置，所以选择 <code>arcTo()</code> 。这种想法是很好的，但问题在于数据计算起来由于精度问题，会导致圆弧终点并不和理想中的终点 100% 重合，所以还是需要调整。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//绘制右边线 and 半圆,圆心(right,bounds.bottom / 2f)</span></span><br><span class="line">path.lineTo(right, circleCenterY - circleRadius)</span><br><span class="line">rectF.<span class="keyword">set</span>(right - circleRadius, circleCenterY - circleRadius, right + circleRadius, circleCenterY + circleRadius)</span><br><span class="line">path.arcTo(rectF, <span class="number">90f</span>, <span class="number">180f</span>, <span class="literal">true</span>)</span><br><span class="line">path.moveTo(right, circleCenterY + circleRadius)<span class="comment">//调整终点位置</span></span><br></pre></td></tr></table></figure>
 <p>左边线也是一样的计算方式</p>
+<p>效果</p>
+<p><img src="/images/td6.jpg" alt=""></p>
 <p><a href="https://github.com/AmoryPepelu/Ladybird/blob/master/AndroidHunter/ViewDemo/app/src/main/java/github/amorypepelu/viewdemo/drawable/TicketDrawable.kt" target="_blank" rel="noopener">源码</a></p>
 <h3 id="绘制边角四分之一圆"><a href="#绘制边角四分之一圆" class="headerlink" title="绘制边角四分之一圆"></a>绘制边角四分之一圆</h3><p><img src="/images/td4.jpg" alt=""></p>
 <p>从右上角半圆开始，先找圆心 <code>(right-R,top+R)</code> </p>

@@ -351,6 +351,383 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/03/12/自定义drawable解决优惠券背景模糊问题/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/03/12/自定义drawable解决优惠券背景模糊问题/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">自定义drawable解决优惠券背景模糊问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-12 15:14:22" itemprop="dateCreated datePublished" datetime="2019-03-12T15:14:22+08:00">2019-03-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-14 18:31:41" itemprop="dateModified" datetime="2019-03-14T18:31:41+08:00">2019-03-14</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>需要实现的效果:</p>
+<p><img src="/images/ticket_drawable_1.jpg" alt="UI图"></p>
+<p>最初是用ui给的一张切图做背景，后来优惠券的文字提示变长图片拉伸改用.9图，背景图线条1像素，半圆还是会很模糊，原图只有一些圆和线还是比较规则的，因此想自己画图来解决。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><ul>
+<li>关键问题在于画线，复杂线条使用path实现</li>
+<li>实现步骤<ul>
+<li>画边框</li>
+<li>画左右半圆</li>
+<li>画四个角的四分之一圆</li>
+</ul>
+</li>
+</ul>
+<h3 id="画边框"><a href="#画边框" class="headerlink" title="画边框"></a>画边框</h3><p>drawable 内部使用 <code>bounds</code> 获取控件大小，设置一些基本属性：线条颜色、宽度，就可以开整了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TicketDrawable3</span></span>(<span class="keyword">private</span> <span class="keyword">val</span> color: <span class="built_in">Int</span>,</span><br><span class="line">                      <span class="keyword">private</span> <span class="keyword">val</span> lineWidth: <span class="built_in">Float</span>) : Drawable() &#123;</span><br><span class="line">    <span class="keyword">val</span> TAG = <span class="string">"Ticket_Drawable"</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> mPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> path = Path()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        mPaint.color = color</span><br><span class="line">        mPaint.strokeWidth = lineWidth</span><br><span class="line">        mPaint.style = Paint.Style.STROKE</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">draw</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span> &#123;</span><br><span class="line">        Log.i(TAG, <span class="string">"ticket_drawable bounds:"</span> + bounds)</span><br><span class="line"></span><br><span class="line">        path.apply &#123;</span><br><span class="line">            moveTo(bounds.left.toFloat(), bounds.top.toFloat())</span><br><span class="line">            lineTo(bounds.right.toFloat(), bounds.top.toFloat())</span><br><span class="line">            lineTo(bounds.right.toFloat(), bounds.bottom.toFloat())</span><br><span class="line">            lineTo(bounds.left.toFloat(), bounds.bottom.toFloat())</span><br><span class="line">            lineTo(bounds.left.toFloat(), bounds.top.toFloat())</span><br><span class="line">            close()</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawPath(path, mPaint)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setAlpha</span><span class="params">(alpha: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">        mPaint.alpha = alpha</span><br><span class="line">        invalidateSelf()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getOpacity</span><span class="params">()</span></span> = PixelFormat.TRANSLUCENT</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setColorFilter</span><span class="params">(colorFilter: <span class="type">ColorFilter</span>?)</span></span> &#123;</span><br><span class="line">        mPaint.colorFilter = colorFilter</span><br><span class="line">        invalidateSelf()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/AmoryPepelu/Ladybird/blob/master/AndroidHunter/ViewDemo/app/src/main/java/github/amorypepelu/viewdemo/drawable/TicketDrawable3.kt" target="_blank" rel="noopener">源码</a></p>
+<p>内部使用 <code>padding</code> 来控制边框空白处间距</p>
+<p>效果：</p>
+<p><img src="/images/ticket_drawable_2.jpg" alt=""></p>
+<h3 id="画左右半圆"><a href="#画左右半圆" class="headerlink" title="画左右半圆"></a>画左右半圆</h3><p>使用 <code>path.arcTo()</code> 方法画圆弧</p>
+<p>参数介绍:</p>
+<ul>
+<li>RectF oval : 要画的圆弧的外边界矩形框</li>
+<li>float startAngle : 起始角度</li>
+<li>float sweepAngle : 需要跨越多少度 </li>
+<li>boolean forceMoveTo : 是否强制将path最后一个点移动到圆弧起点，true是强制移动，即为不连接两个点；false则连接两个点</li>
+</ul>
+<p><img src="/images/td3.png" alt=""></p>
+<p>RectF 值设置(left,top,right,bottom) ,构成一个矩形，画圆时，对角相连即为圆心</p>
+<p>画右边半圆时，先找圆心，圆心在右边边线上，是高度的一半，即：(right,bottom/2)</p>
+<p>构建RectF，由圆心向四边扩展一个半径的距离，即 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">left: right - circleRadius</span><br><span class="line">top: circleCenterY - circleRadius</span><br><span class="line">right: right + circleRadius</span><br><span class="line">bottom: circleCenterY + circleRadius</span><br></pre></td></tr></table></figure>
+<p>把半圆添加进path中，可以使用 <code>addArc()</code> 和 <code>arcTo()</code> ，<code>arcTo()</code> 最后一个参数可以把path坐标移动到圆弧终止位置，所以选择 <code>arcTo()</code> 。这种想法是很好的，但问题在于数据计算起来由于精度问题，会导致圆弧终点并不和理想中的终点 100% 重合，所以还是需要调整。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//绘制右边线 and 半圆,圆心(right,bounds.bottom / 2f)</span></span><br><span class="line">path.lineTo(right, circleCenterY - circleRadius)</span><br><span class="line">rectF.<span class="keyword">set</span>(right - circleRadius, circleCenterY - circleRadius, right + circleRadius, circleCenterY + circleRadius)</span><br><span class="line">path.arcTo(rectF, <span class="number">90f</span>, <span class="number">180f</span>, <span class="literal">true</span>)</span><br><span class="line">path.moveTo(right, circleCenterY + circleRadius)<span class="comment">//调整终点位置</span></span><br></pre></td></tr></table></figure>
+<p>左边线也是一样的计算方式</p>
+<p><a href="https://github.com/AmoryPepelu/Ladybird/blob/master/AndroidHunter/ViewDemo/app/src/main/java/github/amorypepelu/viewdemo/drawable/TicketDrawable.kt" target="_blank" rel="noopener">源码</a></p>
+<h3 id="绘制边角四分之一圆"><a href="#绘制边角四分之一圆" class="headerlink" title="绘制边角四分之一圆"></a>绘制边角四分之一圆</h3><p><img src="/images/td4.jpg" alt=""></p>
+<p>从右上角半圆开始，先找圆心 <code>(right-R,top+R)</code> </p>
+<p>构建RectF,四边扩展 一个半径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">left: right-R-R</span><br><span class="line">top: top</span><br><span class="line">right: right</span><br><span class="line">bottom: top+R+R</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//右上角四分之一圆:圆心(right-R,top+R),RectF(right-R-R,c,right,top+R+R)</span></span><br><span class="line">rectF.<span class="keyword">set</span>(right - cornerRadius * <span class="number">2</span>, top, right, top + cornerRadius * <span class="number">2</span>)</span><br><span class="line">path.arcTo(rectF, -<span class="number">90f</span>, <span class="number">90f</span>, <span class="literal">true</span>)</span><br><span class="line">path.moveTo(right, cornerRadius)</span><br></pre></td></tr></table></figure>
+<p>其他三个边角一样的构建模式</p>
+<p><a href="https://github.com/AmoryPepelu/Ladybird/blob/master/AndroidHunter/ViewDemo/app/src/main/java/github/amorypepelu/viewdemo/drawable/TicketDrawable2.kt" target="_blank" rel="noopener">源码</a></p>
+<p>效果：</p>
+<p><img src="/images/td5.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/02/27/ffmpeg-libx264-so-xxx-not-found-问题/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/02/27/ffmpeg-libx264-so-xxx-not-found-问题/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">ffmpeg libx264.so.xxx not found 问题</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-27 09:53:02 / 修改时间：10:42:27" itemprop="dateCreated datePublished" datetime="2019-02-27T09:53:02+08:00">2019-02-27</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/音视频/" itemprop="url" rel="index"><span itemprop="name">音视频</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>ffmpeg 加载 x264 so 时出现该问题，需要修改 x264 的configure 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//change</span><br><span class="line"></span><br><span class="line">SONAME=libx264.so.$API</span><br><span class="line"></span><br><span class="line">//to</span><br><span class="line"></span><br><span class="line">SONAME=libx264v$API.so</span><br></pre></td></tr></table></figure>
+<p>soname就是编译生成so库的名称的意思，这个名字不能是libx264.so，因为x264编译的时候会生成一个libx2641.so的中间文件，会冲突</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/02/26/x264编译问题处理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -471,7 +848,7 @@
 <p>解决方法：</p>
 <p>根据官网，需要给C编译器制定参数 <code>CFLAGS=-D__ANDROID_API__=$API</code></p>
 <p>修改后的 x264 编译脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line">NDK=/Users/chenliuyong/program/android-ndk-r16b</span><br><span class="line">API=21</span><br><span class="line">PLATFORM=arm-linux-androideabi</span><br><span class="line">SYSROOT=$NDK/platforms/android-$API/arch-arm/</span><br><span class="line">ISYSROOT=$NDK/sysroot</span><br><span class="line">ASM=$ISYSROOT/usr/include/$PLATFORM</span><br><span class="line">TOOLCHAIN=$NDK/toolchains/$PLATFORM-4.9/prebuilt/darwin-x86_64</span><br><span class="line">CPU=arm</span><br><span class="line">PREFIX=$(pwd)/android/$CPU</span><br><span class="line">ADDI_CFLAGS="-marm"</span><br><span class="line">function build_one</span><br><span class="line">&#123;</span><br><span class="line">    ./configure \</span><br><span class="line">    --prefix=$PREFIX \</span><br><span class="line">    --enable-shared \</span><br><span class="line">    --enable-static \</span><br><span class="line">    --enable-pic \</span><br><span class="line">    --disable-asm \</span><br><span class="line">    --disable-cli \</span><br><span class="line">    --disable-thread \</span><br><span class="line">    --host=arm-linux \</span><br><span class="line">    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \</span><br><span class="line">    --sysroot=$SYSROOT \</span><br><span class="line">    --extra-cflags="-I$ASM -isysroot $ISYSROOT -D__ANDROID_API__=$API" \</span><br><span class="line">    --extra-ldflags="$ADDI_LDFLAGS"</span><br><span class="line">    make clean</span><br><span class="line">    make</span><br><span class="line">    make install</span><br><span class="line">&#125;</span><br><span class="line">build_one</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">NDK=/Users/chenliuyong/program/android-ndk-r16b</span><br><span class="line">API=21</span><br><span class="line">PLATFORM=arm-linux-androideabi</span><br><span class="line">SYSROOT=$NDK/platforms/android-$API/arch-arm/</span><br><span class="line">ISYSROOT=$NDK/sysroot</span><br><span class="line">ASM=$ISYSROOT/usr/include/$PLATFORM</span><br><span class="line">TOOLCHAIN=$NDK/toolchains/$PLATFORM-4.9/prebuilt/darwin-x86_64</span><br><span class="line">CPU=arm</span><br><span class="line">PREFIX=$(pwd)/android/$CPU</span><br><span class="line">ADDI_CFLAGS="-marm"</span><br><span class="line">function build_one</span><br><span class="line">&#123;</span><br><span class="line">    ./configure \</span><br><span class="line">    --prefix=$PREFIX \</span><br><span class="line">    --enable-shared \</span><br><span class="line">    --enable-static \</span><br><span class="line">    --enable-pic \</span><br><span class="line">    --disable-asm \</span><br><span class="line">    --disable-cli \</span><br><span class="line">    --disable-thread \</span><br><span class="line">    --host=arm-linux \</span><br><span class="line">    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \</span><br><span class="line">    --sysroot=$SYSROOT \</span><br><span class="line">    --extra-cflags="-I$ASM -isysroot $ISYSROOT -D__ANDROID_API__=$API" \</span><br><span class="line">    --extra-ldflags="$ADDI_LDFLAGS"</span><br><span class="line">    make clean</span><br><span class="line">    make</span><br><span class="line">    make install</span><br><span class="line">&#125;</span><br><span class="line">build_one</span><br></pre></td></tr></table></figure>
 <p>ffmpeg 编译脚本中也需要做对应修改。</p>
 
           
@@ -1771,340 +2148,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2017/07/18/为System.exit添加回调-监听用户杀进程/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/07/18/为System.exit添加回调-监听用户杀进程/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">为System.exit添加回调-监听用户杀进程</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-07-18 07:43:04 / 修改时间：07:49:00" itemprop="dateCreated datePublished" datetime="2017-07-18T07:43:04+08:00">2017-07-18</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在app中调用 <code>System.exit(0)</code> 时，当前activity的 <code>onDestroy()</code> 方法没有被调用，现在为 <code>System.exit(0)</code> 方法添加一个回调。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/07/18/为System.exit添加回调-监听用户杀进程/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2017/01/23/git忽略已经被提交的文件/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/01/23/git忽略已经被提交的文件/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">git忽略已经被提交的文件</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-01-23 21:55:37 / 修改时间：21:58:32" itemprop="dateCreated datePublished" datetime="2017-01-23T21:55:37+08:00">2017-01-23</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>想不提交某个文件，但之前已经提交过，虽然更新了.gitignore ，但再刷新还是提醒要提交此文件。</p>
-<p>解决办法：</p>
-<p>正确的做法应该是：<code>git rm --cached logs/xx.log</code> ，然后更新 <code>.gitignore</code> 忽略掉目标文件，最后 <code>git commit -m &quot;We really don&#39;t want Git to track this anymore!&quot;</code></p>
-<p>参见：<a href="https://segmentfault.com/q/1010000000430426" target="_blank" rel="noopener">git忽略已经被提交的文件</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2149,7 +2197,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">50</span>
+                    <span class="site-state-item-count">52</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2217,7 +2265,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

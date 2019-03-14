@@ -467,7 +467,7 @@
 <p>解决方法：</p>
 <p>根据官网，需要给C编译器制定参数 <code>CFLAGS=-D__ANDROID_API__=$API</code></p>
 <p>修改后的 x264 编译脚本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line">NDK=/Users/chenliuyong/program/android-ndk-r16b</span><br><span class="line">API=21</span><br><span class="line">PLATFORM=arm-linux-androideabi</span><br><span class="line">SYSROOT=$NDK/platforms/android-$API/arch-arm/</span><br><span class="line">ISYSROOT=$NDK/sysroot</span><br><span class="line">ASM=$ISYSROOT/usr/include/$PLATFORM</span><br><span class="line">TOOLCHAIN=$NDK/toolchains/$PLATFORM-4.9/prebuilt/darwin-x86_64</span><br><span class="line">CPU=arm</span><br><span class="line">PREFIX=$(pwd)/android/$CPU</span><br><span class="line">ADDI_CFLAGS="-marm"</span><br><span class="line">function build_one</span><br><span class="line">&#123;</span><br><span class="line">    ./configure \</span><br><span class="line">    --prefix=$PREFIX \</span><br><span class="line">    --enable-shared \</span><br><span class="line">    --enable-static \</span><br><span class="line">    --enable-pic \</span><br><span class="line">    --disable-asm \</span><br><span class="line">    --disable-cli \</span><br><span class="line">    --disable-thread \</span><br><span class="line">    --host=arm-linux \</span><br><span class="line">    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \</span><br><span class="line">    --sysroot=$SYSROOT \</span><br><span class="line">    --extra-cflags="-I$ASM -isysroot $ISYSROOT -D__ANDROID_API__=$API" \</span><br><span class="line">    --extra-ldflags="$ADDI_LDFLAGS"</span><br><span class="line">    make clean</span><br><span class="line">    make</span><br><span class="line">    make install</span><br><span class="line">&#125;</span><br><span class="line">build_one</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line">NDK=/Users/chenliuyong/program/android-ndk-r16b</span><br><span class="line">API=21</span><br><span class="line">PLATFORM=arm-linux-androideabi</span><br><span class="line">SYSROOT=$NDK/platforms/android-$API/arch-arm/</span><br><span class="line">ISYSROOT=$NDK/sysroot</span><br><span class="line">ASM=$ISYSROOT/usr/include/$PLATFORM</span><br><span class="line">TOOLCHAIN=$NDK/toolchains/$PLATFORM-4.9/prebuilt/darwin-x86_64</span><br><span class="line">CPU=arm</span><br><span class="line">PREFIX=$(pwd)/android/$CPU</span><br><span class="line">ADDI_CFLAGS="-marm"</span><br><span class="line">function build_one</span><br><span class="line">&#123;</span><br><span class="line">    ./configure \</span><br><span class="line">    --prefix=$PREFIX \</span><br><span class="line">    --enable-shared \</span><br><span class="line">    --enable-static \</span><br><span class="line">    --enable-pic \</span><br><span class="line">    --disable-asm \</span><br><span class="line">    --disable-cli \</span><br><span class="line">    --disable-thread \</span><br><span class="line">    --host=arm-linux \</span><br><span class="line">    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \</span><br><span class="line">    --sysroot=$SYSROOT \</span><br><span class="line">    --extra-cflags="-I$ASM -isysroot $ISYSROOT -D__ANDROID_API__=$API" \</span><br><span class="line">    --extra-ldflags="$ADDI_LDFLAGS"</span><br><span class="line">    make clean</span><br><span class="line">    make</span><br><span class="line">    make install</span><br><span class="line">&#125;</span><br><span class="line">build_one</span><br></pre></td></tr></table></figure>
 <p>ffmpeg 编译脚本中也需要做对应修改。</p>
 
       
@@ -514,6 +514,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/27/ffmpeg-libx264-so-xxx-not-found-问题/" rel="prev" title="ffmpeg libx264.so.xxx not found 问题">
+                ffmpeg libx264.so.xxx not found 问题 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -576,7 +580,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">50</span>
+                    <span class="site-state-item-count">52</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -644,7 +648,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

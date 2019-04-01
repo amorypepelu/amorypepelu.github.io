@@ -351,6 +351,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/08/26/java-枚举/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2016/08/26/java-枚举/" class="post-title-link" itemprop="https://amorypepelu.github.io/page/5/index.html">Java枚举</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-08-26 21:50:04" itemprop="dateCreated datePublished" datetime="2016-08-26T21:50:04+08:00">2016-08-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-29 10:55:26" itemprop="dateModified" datetime="2018-05-29T10:55:26+08:00">2018-05-29</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>java枚举的简单分析，话说技术博客不应该是炫技的地方了吗？怎么变成了知识备忘的地方了？</p>
+<p>分析方法：枚举的简单使用，内置方法，高级使用。</p>
+<h2 id="枚举的简单使用"><a href="#枚举的简单使用" class="headerlink" title="枚举的简单使用"></a>枚举的简单使用</h2><p>创建一个enum时，编译器会为你生成一个相关的类，这个类继承自<code>java.lang.Enum</code>。每个枚举的项，都可以看成是Enum类的一个实例。</p>
+<h3 id="枚举值的比较"><a href="#枚举值的比较" class="headerlink" title="枚举值的比较"></a>枚举值的比较</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Key k1 = Key.CC;</span><br><span class="line">Key k2 = Key.PEPELU;</span><br><span class="line">System.out.println(<span class="string">"k1==k2?"</span> + (k1 == k2));</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k1==k2?false</span><br></pre></td></tr></table></figure>
+<p>编译器重新定义了枚举比较时的<code>==</code>号操作符，当使用<code>==</code>操作符比较enum实例时，会默认提供<code>equals()</code>和<code>hashCode()</code>方法。枚举中的项都是编译器自动生成的实例，所以不用担心空指针问题。</p>
+<p>可以把枚举看成是一个有着类似于class的struct，内部有着自己的内置方法与实现，重写了一些继承自Object的方法，内部成员可以像class中的静态变量那样使用<code>.</code>操作符访问，并且返回一个成员的实例，但是这个实例的创建与方法的重写都是编译器做的。</p>
+<h3 id="枚举是不能被继承的"><a href="#枚举是不能被继承的" class="headerlink" title="枚举是不能被继承的"></a>枚举是不能被继承的</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这样是不被允许的</span></span><br><span class="line"><span class="keyword">enum</span> Key &#123;CC, PEPELU, ALLEN&#125;</span><br><span class="line"><span class="keyword">enum</span> SubKey extends Key &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="向枚举中添加新方法"><a href="#向枚举中添加新方法" class="headerlink" title="向枚举中添加新方法"></a>向枚举中添加新方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Orz &#123;</span><br><span class="line">    WEST(<span class="string">"west"</span>), NORTH(), EAST(<span class="string">"east"</span>), SOUTH(<span class="string">"this is"</span>, <span class="string">"south"</span>);</span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    Orz() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    Orz(String description) &#123;</span><br><span class="line">        <span class="keyword">this</span>.description = description;</span><br><span class="line">    &#125;</span><br><span class="line">    Orz(String str0, String str1) &#123;</span><br><span class="line">        <span class="keyword">this</span>.description = str0 + <span class="string">","</span> + str1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> description;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义枚举方法需要在枚举实例后面加<code>;</code>符号，然后再添加自定义的方法和属性，如果在实例前添加，编译器会报错。函数是可以重载的，但构造函数不可以使用除了<code>private</code>之外的访问修饰符，因为枚举实例只可以有编译器创建，在其他任何地方创建枚举实例都会报错。</p>
+<p>在class内部创建enum，枚举中的访问权限会被忽略，全部为public，即使设置为<code>private</code>也没用，在同一个包下，<code>private</code>有用，<code>protected</code>没用，相当于public，不同包名下，是有<code>public</code>可以访问。</p>
+<h3 id="在switch中使用枚举"><a href="#在switch中使用枚举" class="headerlink" title="在switch中使用枚举"></a>在switch中使用枚举</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Key &#123;CC, PEPELU, ALLEN&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(Key key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (key) &#123;</span><br><span class="line">        <span class="keyword">case</span> CC:</span><br><span class="line">            System.out.println(<span class="string">"cc"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> PEPELU:</span><br><span class="line">            System.out.println(<span class="string">"pepelu"</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>case中可以直接是Key的实例。要是想要在case中使用return，编译器会抱怨缺少default，要添加default或者case覆盖所有枚举实例。</p>
+<h2 id="内置方法"><a href="#内置方法" class="headerlink" title="内置方法"></a>内置方法</h2><h3 id="Enum-values-和Enum-ordinal"><a href="#Enum-values-和Enum-ordinal" class="headerlink" title="Enum.values()和Enum#ordinal()"></a>Enum.values()和Enum#ordinal()</h3><p>Enum.values()方法返回enum实例的数组，数组元素的顺序是其在枚举中声明的顺序；Enum#ordinal()方法返回枚举元素在声明中的次序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Key &#123;CC, PEPELU, ALLEN&#125;</span><br><span class="line">System.out.println(<span class="string">"enum#values() index:"</span> + Key.values()[<span class="number">0</span>]);</span><br><span class="line"><span class="keyword">for</span> (Key k : Key.values()) &#123;</span><br><span class="line">    <span class="comment">//输出枚举成员k在Key中的排序，从0开始</span></span><br><span class="line">    System.out.println(k + <span class="string">" ordinal:"</span> + k.ordinal());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enum#values() index:CC</span><br><span class="line">CC ordinal:0</span><br><span class="line">PEPELU ordinal:1</span><br><span class="line">ALLEN ordinal:2</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/08/21/java-class-loader/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1965,225 +2154,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2015/04/02/Hexo建站/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2015/04/02/Hexo建站/" class="post-title-link" itemprop="https://amorypepelu.github.io/page/5/index.html">Hexo的使用</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-04-02 09:00:13" itemprop="dateCreated datePublished" datetime="2015-04-02T09:00:13+08:00">2015-04-02</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-29 10:55:45" itemprop="dateModified" datetime="2018-05-29T10:55:45+08:00">2018-05-29</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>总结一下hexo的使用技巧</p>
-<h2 id="首页展示折叠"><a href="#首页展示折叠" class="headerlink" title="首页展示折叠"></a>首页展示折叠</h2><p>在需要折叠的地方添加 <code>&lt;!--more--&gt;</code></p>
-<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><p><a href="https://hexo.io/zh-cn/docs/commands.html" target="_blank" rel="noopener">指令集</a></p>
-<ul>
-<li><p>hexo g = hexo generate  // 生成</p>
-</li>
-<li><p>hexo d = hexo deploy    // 部署</p>
-</li>
-<li><p>hexo s = hexo server    // 运行服务器</p>
-</li>
-<li><p>hexo new post “article title”    //新建文章</p>
-</li>
-</ul>
-<h2 id="头像设置"><a href="#头像设置" class="headerlink" title="头像设置"></a>头像设置</h2><p>参考：<a href="https://github.com/iissnan/hexo-theme-next/wiki/%E8%AE%BE%E7%BD%AE%E4%BE%A7%E8%BE%B9%E6%A0%8F%E5%A4%B4%E5%83%8F" title="Title" target="_blank" rel="noopener">设置侧边栏头像</a></p>
-<h2 id="文章中插入图片"><a href="#文章中插入图片" class="headerlink" title="文章中插入图片"></a>文章中插入图片</h2><p>使用markdown写文章，插入图片的格式为<code>![图片名称](链接地址)</code>，这里要说的是链接地址怎么写。对于hexo，有两种方式：</p>
-<ol>
-<li><p>使用本地路径：在<code>hexo/source</code>目录下新建一个<code>img</code>文件夹，将图片放入该文件夹下，插入图片时链接即为<code>/img/图片名称</code>。</p>
-</li>
-<li><p>使用<em>微博图床</em>，地址<a href="http://weibotuchuang.sinaapp.com/" target="_blank" rel="noopener">http://weibotuchuang.sinaapp.com/</a>，将图片拖入区域中，会生成图片的URL，这就是链接地址</p>
-</li>
-</ol>
-<h2 id="分页设置"><a href="#分页设置" class="headerlink" title="分页设置"></a>分页设置</h2><p>在配置<code>站点配置文件</code>中添加:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">index_generator:</span><br><span class="line">  per_page: 5</span><br><span class="line"></span><br><span class="line">archive_generator:</span><br><span class="line">  per_page: 20</span><br><span class="line">  yearly: true</span><br><span class="line">  monthly: true</span><br><span class="line"></span><br><span class="line">tag_generator:</span><br><span class="line">  per_page: 10</span><br></pre></td></tr></table></figure>
-<p>分别是主页、归档和标签的页数。如果部署失败就先执行 <code>$ npm i --save</code> ，参考：<a href="https://github.com/iissnan/hexo-theme-next/issues/30" title="Title" target="_blank" rel="noopener">首页分页和归档分页不同是如何做到的</a></p>
-<h2 id="新建自定义标签"><a href="#新建自定义标签" class="headerlink" title="新建自定义标签"></a>新建自定义标签</h2><p>在项目目录执行 <code>hexo new page ${PAGE_NAME}</code> ，在主题配置文件中增加以PAGE_NAME为名的menu，会在<code>${blog_path}\source\</code>文件夹下面生成对应<code>PAGE_NAME</code>名的文件夹，文件中有个<code>index.md</code>文件就是了，只要在写作的md文件头部加上<code>PAGE_NAME</code>就可以了，参考tag，categories…的创建，汉化：在 <code>languages/zh-Hans.yml</code> 文件的menu下面新增PAGE_NAME并汉化。</p>
-<p>参考：<a href="https://github.com/iissnan/hexo-theme-next/wiki/%E5%88%9B%E5%BB%BA%E5%88%86%E7%B1%BB%E9%A1%B5%E9%9D%A2" target="_blank" rel="noopener">创建分类页面</a></p>
-<h2 id="字体大小更改"><a href="#字体大小更改" class="headerlink" title="字体大小更改"></a>字体大小更改</h2><p>在<code>${Blog}\themes\next\source\css\_variables\custom.styl</code>文件里面添加：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$font-size-base           = 16px</span><br><span class="line">$code-font-size           = 14px</span><br></pre></td></tr></table></figure>
-<p>参考：<a href="http://theme-next.iissnan.com/faqs.html" target="_blank" rel="noopener">next-常见问题</a></p>
-<p>修改代码字体大小后，在火狐浏览器上变得惨不忍睹（缩成一团），修改<code>${Blog}\themes\next\source\css\_variables\base.styl</code>文件下的</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$line-height-code-block = 1.5</span><br></pre></td></tr></table></figure>
-<p>原值是<code>1.6</code>。好多问题在next的issue下面都有讨论的。<del>有可能是code字体每增大1，<code>line-height-code-block</code>的值减小0.1，未验证</del>。</p>
-<h2 id="生成默认带有categories的模板"><a href="#生成默认带有categories的模板" class="headerlink" title="生成默认带有categories的模板"></a>生成默认带有categories的模板</h2><p>使用<code>hexo new ${post_title}</code>生成模板时通常只有<code>title</code>,<code>date</code>,<code>tags</code>三个标签，想要加标签的话就在<code>${blog_path}\scaffolds\post.md</code>文件中添加一个标签就可以了。</p>
-<h2 id="菜单栏排序"><a href="#菜单栏排序" class="headerlink" title="菜单栏排序"></a>菜单栏排序</h2><p>在<code>主题配置文件</code>中找到<code>menu</code>配置块，调整顺序即可。</p>
-<h2 id="侧边栏默认显示与否配置"><a href="#侧边栏默认显示与否配置" class="headerlink" title="侧边栏默认显示与否配置"></a>侧边栏默认显示与否配置</h2><p>在<code>主题配置文件</code>中，找到<code>sidebar</code>块，配置<code>display</code>。</p>
-<h2 id="网站图标设置"><a href="#网站图标设置" class="headerlink" title="网站图标设置"></a>网站图标设置</h2><p>在<code>主题配置文件</code>中配置<code>favicon</code>，配置为<code>favicon: /images/favicon.ico</code>，把图标文件<code>favicon.ico</code>放到<code>${blog}\images\</code>文件夹下即可。</p>
-<h2 id="头像设置-1"><a href="#头像设置-1" class="headerlink" title="头像设置"></a>头像设置</h2><p>在<code>主题配置文件</code>中配置<code>avatar</code>为<code>avatar: /images/avatar3.jpg</code>或者一个链接的地址，然后在<code>主题</code>目录下的images文件夹下面放置头像jpg文件。</p>
-<h2 id="文章中添加图片"><a href="#文章中添加图片" class="headerlink" title="文章中添加图片"></a>文章中添加图片</h2><p>在插入图片的位置写<code>/images/${image_name}</code>，把图片放在<code>${blog_path}\images\</code>文件夹下面。</p>
-<h2 id="设置文章在屏幕上显示的宽度"><a href="#设置文章在屏幕上显示的宽度" class="headerlink" title="设置文章在屏幕上显示的宽度"></a>设置文章在屏幕上显示的宽度</h2><p>在<code>${blog_path}\themes\next\source\css\_variables\custom.styl</code>中添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 修改成你期望的宽度</span><br><span class="line">$content-desktop = 800px</span><br><span class="line"></span><br><span class="line">// 当视窗超过 1600px 后的宽度</span><br><span class="line">$content-desktop-large = 900px</span><br></pre></td></tr></table></figure>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
-<li>在用<code>hexo new &lt;post_name&gt;</code>新建post时，标题有空格的要加<code>&quot;&quot;</code>。</li>
-</ul>
-<p>参考：</p>
-<p><a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">NexT文档</a></p>
-<p><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">NexT项目地址</a></p>
-<p><a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">Hexo中文文档</a></p>
-<p><a href="http://www.jianshu.com/p/99665608d295" target="_blank" rel="noopener">如何在一天之内搭建以你自己名字为域名且具备cool属性的个人博客</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2233,7 +2203,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-count">53</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2303,7 +2273,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -351,6 +351,209 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/04/12/源码分析-Activity被系统销毁后重建Fragment数据的保存与恢复/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/12/源码分析-Activity被系统销毁后重建Fragment数据的保存与恢复/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">源码分析:Activity被系统销毁后，Fragment的重建与数据的保存和恢复</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-12 09:54:20 / 修改时间：12:21:28" itemprop="dateCreated datePublished" datetime="2019-04-12T09:54:20+08:00">2019-04-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>bugly上有个crash，是使用kotlin的 <code>lateinit var</code> 的属性没有被初始化造成的，相关代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CpWxNumSucDialog</span> : <span class="type">BaseDialogFragment</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> wxNum: String</span><br><span class="line"></span><br><span class="line">     <span class="keyword">public</span> View onCreateView(LayoutInflater inflater, <span class="meta">@Nullable</span> ViewGroup container,</span><br><span class="line">                             <span class="meta">@Nullable</span> Bundle savedInstanceState) &#123;</span><br><span class="line">        <span class="keyword">val</span> binding = safeBind&lt;LayoutCpWxSucBinding&gt;(rootView!!)!!</span><br><span class="line">        binding.tvWechat.text = wxNum <span class="comment">// !! crash !!</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setData</span><span class="params">(wxNum: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.wxNum = wxNum</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析崩溃日志发现Fragment依赖的Activity重新走了 <code>onCreate()</code> 创建流程，推测可能是由于用户按 home 键，在此Activity页面将应用退到后台，长期未唤起导致应用被系统回收，再次进入APP，系统恢复Activity状态导致。</p>
+<h2 id="修复问题"><a href="#修复问题" class="headerlink" title="修复问题"></a>修复问题</h2><p>在 <code>setData()</code> 方法中，不使用直接赋值，而是使用 <code>arguments</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fun setData(wxNum: String) &#123;</span><br><span class="line">    arguments = Bundle().also &#123;</span><br><span class="line">        it.putString(Wx_Num, wxNum)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>先结合Activity看Fragment销毁重建的生命周期，使用 <code>横竖屏切换</code> 来模拟Activity被系统回收情况</p>
+<h3 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">I: Activity onCreate: </span><br><span class="line">I: Activity onResume: </span><br><span class="line">I: fragment onAttach: </span><br><span class="line">I: fragment onCreate: </span><br><span class="line">I: fragment onCreateView: </span><br><span class="line">I: onCreateView: b1==b2:false</span><br><span class="line">I: fragment onActivityCreated: </span><br><span class="line">I: fragment onViewStateRestored:</span><br></pre></td></tr></table></figure>
+<h3 id="销毁重建"><a href="#销毁重建" class="headerlink" title="销毁重建"></a>销毁重建</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">I: fragment onSaveInstanceState:</span><br><span class="line">I: Activity onSaveInstanceState: </span><br><span class="line">I: fragment onDestroyView: </span><br><span class="line">I: fragment onDestroy: </span><br><span class="line">I: fragment onDetach: </span><br><span class="line">I: Activity onDestroy: </span><br><span class="line">I: fragment onAttach: </span><br><span class="line">I: fragment onCreate: </span><br><span class="line">I: Activity onCreate: </span><br><span class="line">I: fragment onCreateView: </span><br><span class="line">I: onCreateView: </span><br><span class="line">I: fragment onActivityCreated: </span><br><span class="line">I: fragment onViewStateRestored:</span><br><span class="line">I: Activity onRestoreInstanceState: </span><br><span class="line">I: Activity onResume:</span><br></pre></td></tr></table></figure>
+<p><code>onSaveInstanceState</code> 和 <code>onRestoreInstanceState</code> 都被调用了。</p>
+<h3 id="加入数据"><a href="#加入数据" class="headerlink" title="加入数据"></a>加入数据</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FragmentManager fragmentManager = getSupportFragmentManager();</span><br><span class="line">VDFragment fragment = <span class="keyword">new</span> VDFragment();</span><br><span class="line">Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">bundle.putString(<span class="string">"data"</span>, <span class="string">"batman"</span>);</span><br><span class="line">fragment.setArguments(bundle);</span><br><span class="line">fragmentManager.beginTransaction()</span><br><span class="line">        .replace(R.id.fl_container, fragment)</span><br><span class="line">        .commit();</span><br></pre></td></tr></table></figure>
+<p>在Fragment <code>onCreateView()</code> 中取数据，并且观察Activity、supportFragmentManager、Fragment、arguments 几个对象的情况</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//activity</span></span><br><span class="line">Log.i(TAG, <span class="string">"Activity onCreate: getSupportFragmentManager hashcode="</span> + getSupportFragmentManager().hashCode()</span><br><span class="line">+ <span class="string">",activity hashcode="</span> + hashCode());</span><br><span class="line"></span><br><span class="line"><span class="comment">//fragment</span></span><br><span class="line"><span class="keyword">static</span> Bundle b1;</span><br><span class="line"><span class="keyword">static</span> Bundle b2;</span><br><span class="line"></span><br><span class="line">Bundle bundle = getArguments();</span><br><span class="line"><span class="keyword">if</span> (b1 == <span class="keyword">null</span>) &#123;</span><br><span class="line">    b1 = bundle;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    b2 = bundle;</span><br><span class="line">    Log.i(TAG, <span class="string">"onCreateView: b1==b2:"</span> + (b1 == b2));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (bundle != <span class="keyword">null</span>) &#123;</span><br><span class="line">    Log.i(<span class="string">"fragment_ts"</span>, bundle.getString(<span class="string">"data"</span>)</span><br><span class="line">            + <span class="string">",fragment hashcode="</span> + hashCode()</span><br><span class="line">            + <span class="string">",bundle hashcode="</span> + bundle.hashCode()</span><br><span class="line">            + <span class="string">",activity hashcode="</span> + getContext().hashCode());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>日志:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">I: Activity onCreate: getSupportFragmentManager hashcode=42730560,activity hashcode=25396074</span><br><span class="line">I: fragment onCreateView: </span><br><span class="line">I: onCreateView: b1==b2:true</span><br><span class="line">I: batman,fragment hashcode=141131641,bundle hashcode=161033219,activity hashcode=25396074</span><br><span class="line"></span><br><span class="line">I: Activity onCreate: getSupportFragmentManager hashcode=168308313,activity hashcode=34224187</span><br><span class="line">I: fragment onCreateView: </span><br><span class="line">I: onCreateView: b1==b2:true</span><br><span class="line">I: batman,fragment hashcode=91294238,bundle hashcode=161033219,activity hashcode=34224187</span><br><span class="line"></span><br><span class="line">I: Activity onCreate: getSupportFragmentManager hashcode=38793086,activity hashcode=55190968</span><br><span class="line">I: fragment onCreateView: </span><br><span class="line">I: onCreateView: b1==b2:true</span><br><span class="line">I: batman,fragment hashcode=7703775,bundle hashcode=161033219,activity hashcode=55190968</span><br></pre></td></tr></table></figure>
+<p>可以看到 <code>argument</code> 内存地址和 hashcode 都是相同的，是同一个对象，但是 FragmentManager 、 Activity 、 Fragment 的 hashcode 都不相同，是新对象。</p>
+<p>所以数据应该保存在 argument 里面而不是作为属性保存在Fragment里面，不然就需要在 <code>onSaveInstanceState</code> 和 <code>onRestoreInstanceState</code> 中做处理。</p>
+<p>问题是： <code>argument</code> 对应的 <code>Bundle</code> 是如何保存的呢？</p>
+<p>分析思路：</p>
+<ol>
+<li>在Fragment的 <code>onSaveInstanceState</code> 和 <code>onRestoreInstanceState</code> 中 查看关于 mArguments 的内容，并没有有用的发现，线索断裂</li>
+<li>既然bundle是赋值给mArguments的，查看有什么地方处理了mArguments，发现内部类 <code>FragmentState</code>，从类名就可以察觉这个东西很有嫌疑(这是 support-26 版本的源码，这个版本里面， FragmentState 是 Fragment 的非静态内部类，会持有Fragment的引用造成内存泄露，后面的版本把 FragmentState 拎出去了)</li>
+<li>如图不是低版本 support library，只能追溯Fragment宿主Activity的 <code>onSaveInstanceState()</code> 了，可以在父类 FragmentActivity 中发现以下代码</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">    markFragmentsCreated();</span><br><span class="line">    Parcelable p = mFragments.saveAllState();</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">        outState.putParcelable(FRAGMENTS_TAG, p);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mFragments :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> FragmentController mFragments = FragmentController.createController(<span class="keyword">new</span> HostCallbacks());</span><br><span class="line"></span><br><span class="line"><span class="comment">//FragmentController</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Parcelable <span class="title">saveAllState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mHost.mFragmentManager.saveAllState();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>最后调用到 <code>FragmentManager#saveAllState()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//省略部分代码</span></span><br><span class="line"><span class="function">Parcelable <span class="title">saveAllState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// First collect all active fragments.</span></span><br><span class="line">    <span class="keyword">int</span> N = mActive.size();</span><br><span class="line">    FragmentState[] active = <span class="keyword">new</span> FragmentState[N];</span><br><span class="line">    <span class="keyword">boolean</span> haveFragments = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;N; i++) &#123;</span><br><span class="line">        Fragment f = mActive.valueAt(i);</span><br><span class="line">        FragmentState fs = <span class="keyword">new</span> FragmentState(f);</span><br><span class="line">        active[i] = fs;</span><br><span class="line">    &#125;</span><br><span class="line">    FragmentManagerState fms = <span class="keyword">new</span> FragmentManagerState();</span><br><span class="line">    fms.mActive = active;</span><br><span class="line">    fms.mAdded = added;</span><br><span class="line">    fms.mBackStack = backStack;</span><br><span class="line">    <span class="keyword">if</span> (mPrimaryNav != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fms.mPrimaryNavActiveIndex = mPrimaryNav.mIndex;</span><br><span class="line">    &#125;</span><br><span class="line">    fms.mNextFragmentIndex = mNextFragmentIndex;</span><br><span class="line">    saveNonConfig();</span><br><span class="line">    <span class="keyword">return</span> fms;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以 FragmentActivity 中用 FRAGMENTS_TAG 保存的实际上是 FragmentManagerState 对象，简称fms。fms 中 active 数组保存 FragmentState 对象，FragmentState 中保存 Fragment状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//FragmentState</span></span><br><span class="line">FragmentState(Fragment frag) &#123;</span><br><span class="line">    mClassName = frag.getClass().getName();</span><br><span class="line">    mIndex = frag.mIndex;</span><br><span class="line">    mFromLayout = frag.mFromLayout;</span><br><span class="line">    mFragmentId = frag.mFragmentId;</span><br><span class="line">    mContainerId = frag.mContainerId;</span><br><span class="line">    mTag = frag.mTag;</span><br><span class="line">    mRetainInstance = frag.mRetainInstance;</span><br><span class="line">    mDetached = frag.mDetached;</span><br><span class="line">    mArguments = frag.mArguments;</span><br><span class="line">    mHidden = frag.mHidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>数据恢复</p>
+<p>从 <code>onRestoreInstanceState()</code> 开始，可以直接从 FragmentActivity 开始看了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState,</span></span></span><br><span class="line"><span class="function"><span class="params">            PersistableBundle persistentState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) &#123;</span><br><span class="line">        onRestoreInstanceState(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>嗯，没有。看看父类呢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mWindow != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Bundle windowState = savedInstanceState.getBundle(WINDOW_HIERARCHY_TAG);</span><br><span class="line">        <span class="keyword">if</span> (windowState != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mWindow.restoreHierarchyState(windowState);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还是没有。 great !</p>
+<p>既然 FragmentActivity 中是通过 <code>mFragments</code> 间接操作 FragmentManager 的，那直接找 <code>mFragments</code> 的所有调用位置，或者搜 <code>mFragments.restore</code> 好了。</p>
+<p>在 <code>onCreate()</code> 找到了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.mFragments.attachHost((Fragment)<span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">    NonConfigurationInstances nc =</span><br><span class="line">            (NonConfigurationInstances) getLastNonConfigurationInstance();</span><br><span class="line">    <span class="keyword">if</span> (nc != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mViewModelStore = nc.viewModelStore;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Parcelable p = savedInstanceState.getParcelable(<span class="string">"android:support:fragments"</span>);</span><br><span class="line">        <span class="keyword">this</span>.mFragments.restoreAllState(p, nc != <span class="keyword">null</span> ? nc.fragments : <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//重走Fragment create 生命周期</span></span><br><span class="line">    <span class="keyword">this</span>.mFragments.dispatchCreate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看 FragmentManager</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">restoreAllState</span><span class="params">(Parcelable state, FragmentManagerNonConfig nonConfig)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// If there is no saved state at all, then there can not be</span></span><br><span class="line">    <span class="comment">// any nonConfig fragments either, so that is that.</span></span><br><span class="line">    <span class="keyword">if</span> (state == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line">    FragmentManagerState fms = (FragmentManagerState)state;</span><br><span class="line">    <span class="keyword">if</span> (fms.mActive == <span class="keyword">null</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Build the full list of active fragments, instantiating them from</span></span><br><span class="line">    <span class="comment">// their saved state.</span></span><br><span class="line">    mActive = <span class="keyword">new</span> SparseArray&lt;&gt;(fms.mActive.length);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;fms.mActive.length; i++) &#123;</span><br><span class="line">        FragmentState fs = fms.mActive[i];</span><br><span class="line">        <span class="keyword">if</span> (fs != <span class="keyword">null</span>) &#123;</span><br><span class="line">            FragmentManagerNonConfig childNonConfig = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (childNonConfigs != <span class="keyword">null</span> &amp;&amp; i &lt; childNonConfigs.size()) &#123;</span><br><span class="line">                childNonConfig = childNonConfigs.get(i);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//重新创建Fragment对象</span></span><br><span class="line">            Fragment f = fs.instantiate(mHost, mContainer, mParent, childNonConfig,</span><br><span class="line">                    viewModelStore);</span><br><span class="line">            </span><br><span class="line">            mActive.put(f.mIndex, f);</span><br><span class="line">            <span class="comment">// Now that the fragment is instantiated (or came from being</span></span><br><span class="line">            <span class="comment">// retained above), clear mInstance in case we end up re-restoring</span></span><br><span class="line">            <span class="comment">// from this FragmentState again.</span></span><br><span class="line">            fs.mInstance = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里恢复Fragment栈，并把 savedInstanceState 里面保存的 FragmentManagerState 序列化对象重新创建，因为 mActive 数组里面只是保存 FragmentState 对象的堆地址，所以 FragmentState 对象并没有重新创建，所以里面保存的 argument 也没有重新创建。</p>
+<p><a href="https://github.com/AmoryPepelu/Ladybird/blob/master/AndroidHunter/ViewDemo/app/src/main/java/github/amorypepelu/viewdemo/fragment/FragmentActivity.java" target="_blank" rel="noopener">源码</a></p>
+<p>the end .</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/04/01/RecyclerView优化-独立ViewType优化/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1976,183 +2179,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2018/05/28/相关联的二元组排序/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/05/28/相关联的二元组排序/" class="post-title-link" itemprop="https://amorypepelu.github.io/index.html">相关联的二元组排序</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-28 10:47:19" itemprop="dateCreated datePublished" datetime="2018-05-28T10:47:19+08:00">2018-05-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-29 11:18:34" itemprop="dateModified" datetime="2018-05-29T11:18:34+08:00">2018-05-29</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="两种不同类型的二元组"><a href="#两种不同类型的二元组" class="headerlink" title="两种不同类型的二元组"></a>两种不同类型的二元组</h2><p>数据的基础存储单元</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 两种不同类型的二元组</span></span><br><span class="line"><span class="comment"> * Created by sly on 2017/2/27.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tuple</span>&lt;<span class="title">T</span>, <span class="title">P</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> T first;</span><br><span class="line">    <span class="keyword">private</span> P second;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Tuple</span><span class="params">(T first, P second)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">        <span class="keyword">this</span>.second = second;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> first;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirst</span><span class="params">(T first)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.first = first;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> P <span class="title">getSecond</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> second;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSecond</span><span class="params">(P second)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.second = second;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="存储键值对"><a href="#存储键值对" class="headerlink" title="存储键值对"></a>存储键值对</h2><p>实现Comparable接口，只比较第二个</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Key-Value pair，只比较第二位</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Compare2ndPair</span>&lt;<span class="title">T</span>, <span class="title">P</span> <span class="keyword">extends</span> <span class="title">Comparable</span>&lt;<span class="title">P</span>&gt;&gt; <span class="keyword">extends</span> <span class="title">Tuple</span>&lt;<span class="title">T</span>, <span class="title">P</span>&gt; </span></span><br><span class="line"><span class="class">			 <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Compare2ndPair</span>&lt;<span class="title">T</span>, <span class="title">P</span>&gt;&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Compare2ndPair</span><span class="params">(T first, P second)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(first, second);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Compare2ndPair&lt;T, P&gt; o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getSecond().compareTo(o.getSecond());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="反序排序"><a href="#反序排序" class="headerlink" title="反序排序"></a>反序排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对yList进行反序排序，并且yList对应的xList也进行反序排序</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> xlist</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ylist</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, P extends Comparable&lt;P&gt;&gt; Tuple&lt;List&lt;T&gt;, List&lt;P&gt;&gt; getReverseListTuple(List&lt;T&gt; xlist, List&lt;P&gt; ylist) &#123;</span><br><span class="line">    ArrayList&lt;Compare2ndPair&lt;T, P&gt;&gt; rawXYList = <span class="keyword">new</span> ArrayList&lt;Compare2ndPair&lt;T, P&gt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; xlist.size(); i++) &#123;</span><br><span class="line">        rawXYList.add(<span class="keyword">new</span> Compare2ndPair&lt;T, P&gt;(xlist.get(i), ylist.get(i)));</span><br><span class="line">    &#125;</span><br><span class="line">    Collections.sort(rawXYList, Collections.reverseOrder());</span><br><span class="line">    List&lt;T&gt; newXList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    List&lt;P&gt; newYList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rawXYList.size(); i++) &#123;</span><br><span class="line">        newXList.add(rawXYList.get(i).getFirst());</span><br><span class="line">        newYList.add(rawXYList.get(i).getSecond());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Tuple&lt;List&lt;T&gt;, List&lt;P&gt;&gt;(newXList, newYList);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="跳跃排序"><a href="#跳跃排序" class="headerlink" title="跳跃排序"></a>跳跃排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对yList进行跳跃排序，并且yList对应的xList也进行跳跃排序</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 获取间断List--每两个大数的之间有一个小的数</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 例如输入[10, 3, 8, 6, 9, 2, 1]</span></span><br><span class="line"><span class="comment"> * 输出[10, 1, 8, 2, 6, 3, 9]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> xlist</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ylist</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T, P extends Comparable&lt;P&gt;&gt; Tuple&lt;List&lt;T&gt;, List&lt;P&gt;&gt; getMultiTypeIntervalListTuple(List&lt;T&gt; xlist, List&lt;P&gt; ylist) &#123;</span><br><span class="line">    ArrayList&lt;Compare2ndPair&lt;T, P&gt;&gt; rawXYList = <span class="keyword">new</span> ArrayList&lt;Compare2ndPair&lt;T, P&gt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; xlist.size(); i++) &#123;</span><br><span class="line">        rawXYList.add(<span class="keyword">new</span> Compare2ndPair&lt;T, P&gt;(xlist.get(i), ylist.get(i)));</span><br><span class="line">    &#125;</span><br><span class="line">    Collections.sort(rawXYList, Collections.reverseOrder());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = rawXYList.size() - <span class="number">1</span>; i &gt; rawXYList.size() / <span class="number">2</span>; i--) &#123;</span><br><span class="line">        Compare2ndPair&lt;T, P&gt; temp = rawXYList.get(i);</span><br><span class="line">        rawXYList.set(i, rawXYList.get(<span class="number">2</span> * (rawXYList.size() - i) - <span class="number">1</span>));</span><br><span class="line">        rawXYList.set(<span class="number">2</span> * (rawXYList.size() - i) - <span class="number">1</span>, temp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;T&gt; newXList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    List&lt;P&gt; newYList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rawXYList.size(); i++) &#123;</span><br><span class="line">        newXList.add(rawXYList.get(i).getFirst());</span><br><span class="line">        newYList.add(rawXYList.get(i).getSecond());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Tuple&lt;List&lt;T&gt;, List&lt;P&gt;&gt;(newXList, newYList);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    List&lt;Integer&gt; l1 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    l1.add(<span class="number">12</span>);</span><br><span class="line">    l1.add(<span class="number">23</span>);</span><br><span class="line">    l1.add(<span class="number">1</span>);</span><br><span class="line">    l1.add(<span class="number">7</span>);</span><br><span class="line">    l1.add(<span class="number">4</span>);</span><br><span class="line">    l1.add(<span class="number">54</span>);</span><br><span class="line">    l1.add(<span class="number">78</span>);</span><br><span class="line">    List&lt;String&gt; l2 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    l2.add(<span class="string">"12"</span>);</span><br><span class="line">    l2.add(<span class="string">"23"</span>);</span><br><span class="line">    l2.add(<span class="string">"1"</span>);</span><br><span class="line">    l2.add(<span class="string">"7"</span>);</span><br><span class="line">    l2.add(<span class="string">"4"</span>);</span><br><span class="line">    l2.add(<span class="string">"54"</span>);</span><br><span class="line">    l2.add(<span class="string">"78"</span>);</span><br><span class="line">    List&lt;Compare2&lt;String, Integer&gt;&gt; l3 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Tuple&lt;List&lt;String&gt;, List&lt;Integer&gt;&gt; typeTuple = getReverseListTuple(l2, l1);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; typeTuple.getFirst().size(); i++) &#123;</span><br><span class="line">        System.out.println(typeTuple.getFirst().get(i) + <span class="string">":"</span> + typeTuple.getSecond().get(i));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2202,7 +2228,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2274,7 +2300,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
+                      
+                    
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

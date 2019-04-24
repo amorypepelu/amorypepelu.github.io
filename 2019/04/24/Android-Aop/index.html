@@ -108,23 +108,25 @@
 
 
 
-  <meta name="description" content="我的征途是星辰大海">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BlackNeko">
-<meta property="og:url" content="https://amorypepelu.github.io/archives/2010/index.html">
+  <meta name="description" content="包含:  gradle 自定义插件（Java实现） transform : 文件遍历处理、增量编译 Asm:MethodVisitor的使用 Java 8 lambda 异常处理 示例:全自动埋点  全自动埋点支持功能:  setOnClickListener的lambda方法、匿名内部类 实现 OnClickListener 接口的实现类中的 onClick() 方法 使用自定义注解的方法 支持">
+<meta name="keywords" content="Aop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Aop-Asm">
+<meta property="og:url" content="https://amorypepelu.github.io/2019/04/24/Android-Aop/index.html">
 <meta property="og:site_name" content="BlackNeko">
-<meta property="og:description" content="我的征途是星辰大海">
+<meta property="og:description" content="包含:  gradle 自定义插件（Java实现） transform : 文件遍历处理、增量编译 Asm:MethodVisitor的使用 Java 8 lambda 异常处理 示例:全自动埋点  全自动埋点支持功能:  setOnClickListener的lambda方法、匿名内部类 实现 OnClickListener 接口的实现类中的 onClick() 方法 使用自定义注解的方法 支持">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-24T06:13:42.334Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BlackNeko">
-<meta name="twitter:description" content="我的征途是星辰大海">
+<meta name="twitter:title" content="Android-Aop-Asm">
+<meta name="twitter:description" content="包含:  gradle 自定义插件（Java实现） transform : 文件遍历处理、增量编译 Asm:MethodVisitor的使用 Java 8 lambda 异常处理 示例:全自动埋点  全自动埋点支持功能:  setOnClickListener的lambda方法、匿名内部类 实现 OnClickListener 接口的实现类中的 onClick() 方法 使用自定义注解的方法 支持">
 
 
 
 
 
 
-  <link rel="canonical" href="https://amorypepelu.github.io/archives/2010/">
+  <link rel="canonical" href="https://amorypepelu.github.io/2019/04/24/Android-Aop/">
 
 
 
@@ -134,7 +136,7 @@
   };
 </script>
 
-  <title>归档 | BlackNeko</title>
+  <title>Android-Aop-Asm | BlackNeko</title>
   
 
 
@@ -183,7 +185,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -271,7 +273,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -310,28 +312,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -356,77 +336,208 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-          
-        不错! 目前共计 56 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2010">2010</h1>
-          </div>
-        
-        
-
-        
+  
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2019/04/24/Android-Aop/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2010/01/05/about-me/" itemprop="url">
-              
-                <span itemprop="name">AboutMe</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Android-Aop-Asm
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2010-01-05T20:55:38+08:00" content="2010-01-05">
-          01-05
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
 
+              
+                
+              
+
+              <time title="创建时间：2019-04-24 13:34:29 / 修改时间：14:13:42" itemprop="dateCreated datePublished" datetime="2019-04-24T13:34:29+08:00">2019-04-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>包含:</p>
+<ul>
+<li>gradle 自定义插件（Java实现）</li>
+<li>transform : 文件遍历处理、增量编译</li>
+<li>Asm:MethodVisitor的使用</li>
+<li>Java 8 lambda 异常处理</li>
+<li>示例:全自动埋点</li>
+</ul>
+<p>全自动埋点支持功能:</p>
+<ul>
+<li>setOnClickListener的lambda方法、匿名内部类</li>
+<li>实现 OnClickListener 接口的实现类中的 onClick() 方法</li>
+<li>使用自定义注解的方法</li>
+<li>支持 jar、子module</li>
+</ul>
+<p><a href="https://github.com/AmoryPepelu/Ladybird/tree/master/AopSample" target="_blank" rel="noopener">源码:AopSample</a></p>
+<p>参考:</p>
+<p><a href="https://github.com/wangzhzh/AutoTrackAppClick6" target="_blank" rel="noopener">神策Android全埋点方案:AutoTrack</a></p>
+<p><a href="https://github.com/didi/DroidAssist" target="_blank" rel="noopener">didi Android Studio gradle plugin DroidAssist</a></p>
+
+      
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Aop/" rel="tag"># Aop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/16/TextView-with-block/" rel="next" title="在一段文本中镶嵌一块矩形区域">
+                <i class="fa fa-chevron-left"></i> 在一段文本中镶嵌一块矩形区域
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -722,6 +833,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
 
   
 

@@ -351,6 +351,218 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2018/10/27/TabLayout/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BlackNeko">
+      <meta itemprop="description" content="我的征途是星辰大海">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlackNeko">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/10/27/TabLayout/" class="post-title-link" itemprop="https://amorypepelu.github.io/page/2/index.html">TabLayout</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-27 09:30:33" itemprop="dateCreated datePublished" datetime="2018-10-27T09:30:33+08:00">2018-10-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-16 16:33:42" itemprop="dateModified" datetime="2019-04-16T16:33:42+08:00">2019-04-16</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>解决的问题：</p>
+<ul>
+<li>添加自定义tab</li>
+<li>设置tab间间距</li>
+<li>点击事件处理、tab选中和选中事件回调</li>
+<li>点击TabLayout空白处无响应以及再点击Tab仍无响应问题处理</li>
+<li>tab点击背景效果处理</li>
+<li>设置 indicator 宽度和里面内容宽度一致</li>
+</ul>
+<h3 id="添加自定义tab"><a href="#添加自定义tab" class="headerlink" title="添加自定义tab"></a>添加自定义tab</h3><p>布局：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">android.support.design.widget.TabLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/tab_layout"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_marginStart</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_marginEnd</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintLeft_toRightOf</span>=<span class="string">"@+id/tv_get_ticket_tips"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintRight_toLeftOf</span>=<span class="string">"@+id/iv_more"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:tabBackground</span>=<span class="string">"@color/color_white"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:tabIndicatorHeight</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:tabPadding</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:tabPaddingEnd</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">app:tabPaddingStart</span>=<span class="string">"0dp"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">binding.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (String tip : data) &#123;</span><br><span class="line">    TabLayout.Tab tab = binding.tabLayout.newTab();</span><br><span class="line">    tab.setCustomView(generateTextView(tip));</span><br><span class="line">    binding.tabLayout.addTab(tab);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 构建textview</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> tips</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> TextView <span class="title">generateTextView</span><span class="params">(String tips)</span> </span>&#123;</span><br><span class="line">    TextView tv = <span class="keyword">new</span> TextView(getContext());</span><br><span class="line">    tv.setText(tips);</span><br><span class="line">    tv.setGravity(Gravity.CENTER);</span><br><span class="line">    tv.setBackground(ActivityCompat.getDrawable(getContext(), R.mipmap.bg_get_ticket_tip));</span><br><span class="line">    tv.setTextColor(ActivityCompat.getColor(getContext(), R.color.view_color_FD5056));</span><br><span class="line">    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, <span class="number">13f</span>);</span><br><span class="line">    <span class="keyword">int</span> pt = AndroidUtils.dip2px(getContext(), <span class="number">1.5f</span>);<span class="comment">//paddingTop</span></span><br><span class="line">    <span class="keyword">int</span> pl = AndroidUtils.dip2px(getContext(), <span class="number">8.5f</span>);<span class="comment">//paddingLeft</span></span><br><span class="line">    tv.setPadding(pl, pt, pl, pt);</span><br><span class="line">    <span class="keyword">return</span> tv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果</p>
+<p><img src="/images/tablayout.1.jpg" alt=""></p>
+<p>可滑动</p>
+<p><img src="/images/tablayout.2.jpg" alt=""></p>
+<h3 id="tab间间距问题"><a href="#tab间间距问题" class="headerlink" title="tab间间距问题"></a>tab间间距问题</h3><p>tab之间有默认间距，可以在xml中处理：</p>
+<ul>
+<li>设置底边提示高度为0： <code>app:tabIndicatorHeight=&quot;0dp&quot;</code>  </li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app:tabPadding="0dp"</span><br><span class="line">app:tabPaddingEnd="10dp"</span><br><span class="line">app:tabPaddingStart="0dp"</span><br></pre></td></tr></table></figure>
+<p>或者使用代码处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">resetTabPadding</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//拿到tabLayout的mTabStrip属性</span></span><br><span class="line">        Class&lt;?&gt; tabLayoutClz = TabLayout.class;</span><br><span class="line">        Field mTabStripField = tabLayoutClz.getDeclaredField(<span class="string">"mTabStrip"</span>);</span><br><span class="line">        mTabStripField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        LinearLayout mTabStrip = (LinearLayout) mTabStripField.get(binding.tabLayout);</span><br><span class="line">        <span class="keyword">int</span> dp10 = AndroidUtils.dip2px(getContext(), <span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mTabStrip.getChildCount(); i++) &#123;</span><br><span class="line">            View tabView = mTabStrip.getChildAt(i);</span><br><span class="line">            <span class="comment">//TextView mTextView = (TextView) mTextViewField.get(tabView);</span></span><br><span class="line">            tabView.setPadding(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">            tabView.setBackground(<span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="comment">//ignore</span></span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="tab选中事件处理"><a href="#tab选中事件处理" class="headerlink" title="tab选中事件处理"></a>tab选中事件处理</h3><p>添加选中回调</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tabLayout.addOnTabSelectedListener(<span class="keyword">this</span>);</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabSelected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabUnselected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabReselected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>设置默认选中tab -&gt;在添加tab时：需要在添加tab之前添加回调</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tabLayout.addTab(tab, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="tab-选中效果处理"><a href="#tab-选中效果处理" class="headerlink" title="tab 选中效果处理"></a>tab 选中效果处理</h3><p>tab选中时背景默认会有一个阴暗变化，可以使用 <code>app:tabBackground=&quot;@color/color_white&quot;</code> 屏蔽</p>
+<p>###设置 indicator 宽度和里面内容宽度一致</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">tabLayout.tabMode = TabLayout.MODE_SCROLLABLE</span><br><span class="line"><span class="comment">//add tabs</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> externalMargin 整体tab边距</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> internalMargin 内部tab边距</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">wrapTabIndicatorToTitle</span><span class="params">(tabLayout: <span class="type">TabLayout</span>, externalMargin: <span class="type">Int</span>, internalMargin: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> tabStrip = tabLayout.getChildAt(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> (tabStrip <span class="keyword">is</span> ViewGroup) &#123;</span><br><span class="line">        <span class="keyword">val</span> childCount = tabStrip.childCount</span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until childCount) &#123;</span><br><span class="line">            <span class="keyword">val</span> tabView = tabStrip.getChildAt(i)</span><br><span class="line">            <span class="comment">//set minimum width to 0 for instead for small texts, indicator is not wrapped as expected</span></span><br><span class="line">            tabView.minimumWidth = <span class="number">0</span></span><br><span class="line">            <span class="comment">// set padding to 0 for wrapping indicator as title</span></span><br><span class="line">            tabView.setPadding(<span class="number">0</span>, tabView.paddingTop, <span class="number">0</span>, tabView.paddingBottom)</span><br><span class="line">            <span class="comment">// setting custom margin between tabs</span></span><br><span class="line">            <span class="keyword">if</span> (tabView.layoutParams <span class="keyword">is</span> ViewGroup.MarginLayoutParams) &#123;</span><br><span class="line">                <span class="keyword">val</span> layoutParams = tabView.layoutParams <span class="keyword">as</span> ViewGroup.MarginLayoutParams</span><br><span class="line">                <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// left</span></span><br><span class="line">                    settingMargin(layoutParams, externalMargin, internalMargin)</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i == childCount - <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="comment">// right</span></span><br><span class="line">                    settingMargin(layoutParams, internalMargin, externalMargin)</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// internal</span></span><br><span class="line">                    settingMargin(layoutParams, internalMargin, internalMargin)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        tabLayout.requestLayout()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">settingMargin</span><span class="params">(layoutParams: <span class="type">ViewGroup</span>.<span class="type">MarginLayoutParams</span>, start: <span class="type">Int</span>, end: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN_MR1) &#123;</span><br><span class="line">        layoutParams.marginStart = start</span><br><span class="line">        layoutParams.marginEnd = end</span><br><span class="line">        layoutParams.leftMargin = start</span><br><span class="line">        layoutParams.rightMargin = end</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        layoutParams.leftMargin = start</span><br><span class="line">        layoutParams.rightMargin = end</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://stackoverflow.com/a/44026386" target="_blank" rel="noopener">java code</a></p>
+<h3 id="综合实例"><a href="#综合实例" class="headerlink" title="综合实例"></a>综合实例</h3><p>在一个自定义的ViewGroup中添加多个View，子View满屏可滑动，可以使用RecyclerView、TabLayout、HorizontalScrollView 来做，这里选取 TabLayout。</p>
+<p>按照上面的属性做好后，发现如果让TabLayout充满整个布局，在子Tab不满的情况下，点击TabLayout空白区域，再点击子Tab，点击事件消失，而且点击TabLayout空白区域也不会触发点击事件，原因是TabLayout继承HorizontalScrollView，而HorizontalScrollView中重写了点击事件分发的方法却没有调用performClick()方法，因此HorizontalScrollView无法响应点击事件。</p>
+<p>处理方法：</p>
+<ol>
+<li>让TabLayout布局尽可能小，只需包含所含Tab即可，并且最大不能超过规定的区域，这样可以避免TabLayout多余空白区域被点击到，在TabLayout上套一层FrameLayout，TabLayout宽度设置为wrap_content，FrameLayout宽度设置为充满父容器</li>
+<li>响应每个Tab的点击事件，并调用该自定义ViewGroup的performClick() 方法，把点击响应交个自定义容器上的点击回调处理</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"75dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:descendantFocusability</span>=<span class="string">"blocksDescendants"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:drShadow</span>=<span class="string">"@&#123;`all`&#125;"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/tv_get_ticket_tips"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginStart</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginLeft</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"领券："</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"@color/color_8E8E8E"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"14sp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintLeft_toLeftOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">FrameLayout</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/fl_container"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginStart</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginEnd</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintLeft_toRightOf</span>=<span class="string">"@+id/tv_get_ticket_tips"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintRight_toLeftOf</span>=<span class="string">"@+id/iv_more"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">com.rabbit.doctor.widget.DRTabLayout</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:id</span>=<span class="string">"@+id/tab_layout"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:tabBackground</span>=<span class="string">"@color/color_white"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:tabIndicatorHeight</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:tabPadding</span>=<span class="string">"0dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:tabPaddingEnd</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:tabPaddingStart</span>=<span class="string">"0dp"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">ImageView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/iv_more"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginEnd</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginRight</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:src</span>=<span class="string">"@mipmap/arrow"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintRight_toRightOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">android.support.constraint.ConstraintLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetTicketLayout</span> <span class="keyword">extends</span> <span class="title">DRFrameLayout</span> <span class="keyword">implements</span> <span class="title">TabLayout</span>.<span class="title">OnTabSelectedListener</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> LayoutGetTicketBinding binding;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetTicketLayout</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetTicketLayout</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetTicketLayout</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.init(context);</span><br><span class="line">        binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_get_ticket, <span class="keyword">this</span>, <span class="keyword">true</span>);</span><br><span class="line">        binding.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);</span><br><span class="line">        binding.tabLayout.addOnTabSelectedListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(List&lt;String&gt; data)</span> </span>&#123;</span><br><span class="line">        binding.tabLayout.removeAllTabs();</span><br><span class="line">        <span class="keyword">if</span> (ArrayUtils.isEmptyList(data)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (String tip : data) &#123;</span><br><span class="line">            TabLayout.Tab tab = binding.tabLayout.newTab();</span><br><span class="line">            tab.setCustomView(generateTextView(tip));</span><br><span class="line">            binding.tabLayout.addTab(tab, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构建textview</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> tips</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> TextView <span class="title">generateTextView</span><span class="params">(String tips)</span> </span>&#123;</span><br><span class="line">        TextView tv = <span class="keyword">new</span> TextView(getContext());</span><br><span class="line">        tv.setText(tips);</span><br><span class="line">        tv.setGravity(Gravity.CENTER);</span><br><span class="line">        tv.setBackground(ActivityCompat.getDrawable(getContext(), R.mipmap.bg_get_ticket_tip));</span><br><span class="line">        tv.setTextColor(ActivityCompat.getColor(getContext(), R.color.view_color_FD5056));</span><br><span class="line">        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, <span class="number">13f</span>);</span><br><span class="line">        <span class="keyword">int</span> pt = AndroidUtils.dip2px(getContext(), <span class="number">1.5f</span>);<span class="comment">//paddingTop</span></span><br><span class="line">        <span class="keyword">int</span> pl = AndroidUtils.dip2px(getContext(), <span class="number">8.5f</span>);<span class="comment">//paddingLeft</span></span><br><span class="line">        tv.setPadding(pl, pt, pl, pt);</span><br><span class="line">        <span class="keyword">return</span> tv;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabSelected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//当选中tab时，触发view 点击事件</span></span><br><span class="line">        performClick();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabUnselected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTabReselected</span><span class="params">(TabLayout.Tab tab)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2018/05/29/mpchart-linechart折线定制/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1886,251 +2098,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2017/01/01/java-线程池/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BlackNeko">
-      <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlackNeko">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/01/01/java-线程池/" class="post-title-link" itemprop="https://amorypepelu.github.io/page/2/index.html">线程池</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-01-01 17:07:17" itemprop="dateCreated datePublished" datetime="2017-01-01T17:07:17+08:00">2017-01-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-29 10:55:18" itemprop="dateModified" datetime="2018-05-29T10:55:18+08:00">2018-05-29</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Java线程池分析。</p>
-<h2 id="创建线程池"><a href="#创建线程池" class="headerlink" title="创建线程池"></a>创建线程池</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor threadPoolExecutor =</span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">2</span>, <span class="number">4</span>, <span class="number">1L</span>,</span><br><span class="line">                        TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(<span class="number">3</span>));</span><br></pre></td></tr></table></figure>
-<p>构造函数:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                        TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                        BlockingQueue&lt;Runnable&gt; workQueue)</span></span></span><br></pre></td></tr></table></figure>
-<p>参数分析：</p>
-<ul>
-<li>corePoolSize : 核心线程数</li>
-<li>maximumPoolSize : 最大线程数</li>
-<li>keepAliveTime : 非核心线程闲置时的超时时长，如果设置 <code>ThreadPoolExecutor#allowCoreThreadTimeOut(true)</code>，则核心线程也会在执行完任务后，在等待keepAliveTime时间后终止</li>
-<li>unit : TimeUnit枚举</li>
-<li>workQueue : 线程池中的任务队列</li>
-</ul>
-<p>任务队列实现类：</p>
-<ul>
-<li>ArrayBlockingQueue : 基于数组结构，FIFO（先进先出）</li>
-<li>LinkedBlockingQueue : 链表，FIFO</li>
-<li>SynchronousQueue : 不存储元素，每个插入操作必须等到另一个线程调用移除操作，否则一直处于阻塞状态。Executors.newCachedThreadPool()使用。</li>
-<li>PriorityBlockingQueue : 有优先级，无阻塞。</li>
-</ul>
-<p>此构造函数调用了重载的构造函数，使用了默认的 ThreadFactory 和 RejectedExecutionHandler，最终构造函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                        TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                        BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">                        ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                        RejectedExecutionHandler handler)</span></span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>ThreadFactory : 创造线程工厂</li>
-<li>RejectedExecutionHandler : 饱和策略，线程池满后，新任务添加后的处理</li>
-</ul>
-<p>饱和策略：他们都实现RejectedExecutionHandler接口</p>
-<ul>
-<li>AbortPolicy : 默认实现，直接抛出异常 <code>RejectedExecutionException</code></li>
-<li>CallerRunsPolicy : 只用调用者所在的线程来执行任务</li>
-<li>DiscardOldestPolicy : 丢弃队列里最近的一个任务，并执行当前任务</li>
-<li>DiscardPolicy : 不处理，丢弃</li>
-</ul>
-<p>创建饱和策略实现类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy();</span><br><span class="line"><span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy();</span><br><span class="line"><span class="keyword">new</span> ThreadPoolExecutor.DiscardOldestPolicy();</span><br><span class="line"><span class="keyword">new</span> ThreadPoolExecutor.DiscardPolicy();</span><br></pre></td></tr></table></figure>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor threadPoolExecutor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                <span class="number">2</span>, <span class="number">4</span>, <span class="number">1</span>, TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(<span class="number">3</span>),</span><br><span class="line">                <span class="keyword">new</span> ThreadFactory() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> Thread <span class="title">newThread</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">                        <span class="comment">//create thread 创造线程</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">new</span> Thread(r, <span class="string">"thread#name"</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, <span class="keyword">new</span> RejectedExecutionHandler() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> </span>&#123;</span><br><span class="line">                        <span class="comment">//do something</span></span><br><span class="line">                        <span class="comment">//线程池满后，新任务添加后的处理</span></span><br><span class="line">                    &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-<p>最多任务数 = 核心线程数 + 非核心线程数 + 任务队列长度</p>
-<p>非核心线程数 = 最大线程数 - 核心线程数</p>
-<p>即：</p>
-<p>最多任务数 = 最大线程数 + 任务队列长度</p>
-<h2 id="线程池中的线程开启顺序"><a href="#线程池中的线程开启顺序" class="headerlink" title="线程池中的线程开启顺序"></a>线程池中的线程开启顺序</h2><p>核心线程 -&gt; 任务队列 -&gt; 非核心线程 -&gt; 饱和策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (command == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">    <span class="comment">//线程数小于核心线程数，创建线程并执行</span></span><br><span class="line">    <span class="keyword">if</span> (workerCountOf(c) &lt; corePoolSize) &#123;</span><br><span class="line">        <span class="keyword">if</span> (addWorker(command, <span class="keyword">true</span>))</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        c = ctl.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//加入任务队列</span></span><br><span class="line">    <span class="keyword">if</span> (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;</span><br><span class="line">        <span class="keyword">int</span> recheck = ctl.get();</span><br><span class="line">        <span class="keyword">if</span> (! isRunning(recheck) &amp;&amp; remove(command))</span><br><span class="line">            reject(command);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)</span><br><span class="line">            addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//开启非核心线程</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (!addWorker(command, <span class="keyword">false</span>))&#123;</span><br><span class="line">        <span class="comment">//开启失败，饱和策略</span></span><br><span class="line">        reject(command);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="线程池分类"><a href="#线程池分类" class="headerlink" title="线程池分类"></a>线程池分类</h2><ul>
-<li>FixedThreadPool : 数量固定，只有核心线程，或者说是全是核心线程，没有超时机制，任务队列没有限制</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Executors.newFixedThreadPool( <span class="keyword">int</span> nThreads);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newFixedThreadPool</span><span class="params">(<span class="keyword">int</span> nThreads)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                    <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                    <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>CachedThreadPool : 无核心线程，非核心线程可看做无限大，每个线程无任务60s闲置会被回收，任务队列没有限制，适合大量耗时较少的任务。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Executors.newCachedThreadPool();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newCachedThreadPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                    <span class="number">60L</span>, TimeUnit.SECONDS,</span><br><span class="line">                                    <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>ScheduledThreadPool : 核心线程数固定，非核心线程可看做无限大，任务队列没有限制，适合执行定时任务何具有固定周期的重复任务。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Executors.newScheduledThreadPool( <span class="keyword">int</span> corePoolSize);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ScheduledExecutorService <span class="title">newScheduledThreadPool</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ScheduledThreadPoolExecutor(corePoolSize);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,</span><br><span class="line">            <span class="keyword">new</span> DelayedWorkQueue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>SingleThreadExecutor : 保持所有任务都在同一个线程中执行。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newSingleThreadExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> FinalizableDelegatedExecutorService</span><br><span class="line">        (<span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">1</span>,</span><br><span class="line">                                <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="提交任务"><a href="#提交任务" class="headerlink" title="提交任务"></a>提交任务</h2><p>无返回结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">threadPoolExecutor.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"running "</span> + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>有返回结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;String&gt; future = threadPoolExecutor.submit(<span class="keyword">new</span> Callable&lt;String&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String result = <span class="string">"hello bitch!"</span>;</span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    String result = future.get();</span><br><span class="line">    System.out.println(result);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Future#get() 是阻塞的，在结果返回前会一直等待。</p>
-<h2 id="关闭线程池"><a href="#关闭线程池" class="headerlink" title="关闭线程池"></a>关闭线程池</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">threadPoolExecutor.shutdown();</span><br><span class="line">threadPoolExecutor.shutdownNow();</span><br><span class="line">threadPoolExecutor.isShutdown();</span><br><span class="line">threadPoolExecutor.isTerminated();</span><br><span class="line">threadPoolExecutor.isTerminating();</span><br></pre></td></tr></table></figure>
-<p>shutdown，shutdownNow：遍历工作线程，逐个调用线程的interrupt。</p>
-<p>shutdownNow首先将线程池状态设置为stop，尝试停止正在执行的或是暂停任务的线程，返回等待执行任务的列表。</p>
-<p>shutdown只是把线程状态设置为SHUTDOWN，中断没有正在执行的线程。</p>
-<p>调用shutdown，shutdownNow任意一个方法，isShutdown都会返回true。所有任务都关闭后，isTerminated返回true。</p>
-<h2 id="线程池配置"><a href="#线程池配置" class="headerlink" title="线程池配置"></a>线程池配置</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取当前设备CPU个数</span></span><br><span class="line">Runtime.getRuntime().availableProcessors();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>CPU密集型配置尽可能小的线程，N(cpu) + 1</li>
-<li>IO 密集型配置尽可能多的线程，N(cpu) * 2</li>
-<li>使用有界队列，防止线程开太多</li>
-</ul>
-<h2 id="线程池的监控"><a href="#线程池的监控" class="headerlink" title="线程池的监控"></a>线程池的监控</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程池中需要执行的任务数量，总任务数量</span></span><br><span class="line">threadPoolExecutor.getTaskCount();</span><br><span class="line"></span><br><span class="line"><span class="comment">//已完成</span></span><br><span class="line">threadPoolExecutor.getCompletedTaskCount();</span><br><span class="line"></span><br><span class="line"><span class="comment">//曾经创建过的最大线程数量，可用来判断线程池是否满过</span></span><br><span class="line">threadPoolExecutor.getLargestPoolSize();</span><br><span class="line"></span><br><span class="line"><span class="comment">//线程池中的线程数量</span></span><br><span class="line">threadPoolExecutor.getPoolSize();</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取活动的线程数</span></span><br><span class="line">threadPoolExecutor.getActiveCount();</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2180,7 +2147,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">55</span>
+                    <span class="site-state-item-count">56</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2256,7 +2223,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

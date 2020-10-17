@@ -1,118 +1,50 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-CN">
-<head><meta name="generator" content="Hexo 3.8.0">
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=7.1.0">
-
-
-
-
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '7.1.0',
-    sidebar: {"position":"left","display":"hide","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"amorypepelu.github.io","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"hide","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
 
   <meta name="description" content="命令行编译Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="命令行编译Java">
-<meta property="og:url" content="https://amorypepelu.github.io/2016/04/15/命令行编译java/index.html">
+<meta property="og:url" content="https://amorypepelu.github.io/2016/04/15/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91java/index.html">
 <meta property="og:site_name" content="BlackNeko">
 <meta property="og:description" content="命令行编译Java">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-06T23:23:12.000Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-04-15T01:00:00.000Z">
+<meta property="article:modified_time" content="2016-09-22T12:40:28.000Z">
+<meta property="article:author" content="BlackNeko">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="命令行编译Java">
-<meta name="twitter:description" content="命令行编译Java">
 
 
+<link rel="canonical" href="https://amorypepelu.github.io/2016/04/15/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91java/">
 
 
-
-  
-  
-  <link rel="canonical" href="https://amorypepelu.github.io/2016/04/15/命令行编译java/">
-
-
-
-<script id="page.configurations">
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -124,337 +56,267 @@
 
 
 
-
-
-
-
-
-
   <noscript>
   <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
 
-  .use-motion .logo,
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">BlackNeko</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">BlackNeko</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
 
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-categories">
+        <li class="menu-item menu-item-categories">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
+        <li class="menu-item menu-item-tags">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-archives">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-about">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
 
   </li>
-
-      
-      
-    </ul>
-  
-
-  
-    
-
-  
-
-  
+  </ul>
 </nav>
 
 
 
-  
-
-
 
 </div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E4%BB%A3%E7%A0%81%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">Java代码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%EF%BC%8C%E7%94%9F%E6%88%90class%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">编译，生成class文件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8Ca-class"><span class="nav-number">3.</span> <span class="nav-text">执行a.class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85jar%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">打包jar：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8Cjar%E5%8C%85%E4%B8%AD%E7%9A%84class%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">执行jar包中的class文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%85%B6%E4%BB%96jar%E5%8C%85%EF%BC%8C%E7%BC%96%E8%AF%91%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">引用其他jar包，编译：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%85%B6%E4%BB%96jar%E5%8C%85%EF%BC%8C%E6%89%A7%E8%A1%8C"><span class="nav-number">7.</span> <span class="nav-text">引用其他jar包，执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9Ajar%E5%8C%85%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">多jar包：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%EF%BC%8C%E9%85%8D%E7%BD%AE-META-INF"><span class="nav-number">9.</span> <span class="nav-text">打包，配置 META-INF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">补充：</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">BlackNeko</p>
+  <div class="site-description" itemprop="description">我的征途是星辰大海</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/AmoryPepelu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;AmoryPepelu" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://amorypepelu.github.io/2010/01/05/about-me/" title="AboutMe → https:&#x2F;&#x2F;amorypepelu.github.io&#x2F;2010&#x2F;01&#x2F;05&#x2F;about-me&#x2F;">AboutMe</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
-  
-  
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/AmoryPepelu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
 
   
 
-  <a href="https://github.com/AmoryPepelu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
 
-
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
+<div class="post-block">
   
   
 
-  
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/04/15/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%BC%96%E8%AF%91java/">
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://amorypepelu.github.io/2016/04/15/命令行编译java/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="BlackNeko">
       <meta itemprop="description" content="我的征途是星辰大海">
-      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="BlackNeko">
     </span>
-
-    
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          命令行编译Java
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">命令行编译Java
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              
-            
-          </h1>
-        
+      <time title="创建时间：2016-04-15 09:00:00" itemprop="dateCreated datePublished" datetime="2016-04-15T09:00:00+08:00">2016-04-15</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2016-09-22 20:40:28" itemprop="dateModified" datetime="2016-09-22T20:40:28+08:00">2016-09-22</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
 
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2016-04-15 09:00:00" itemprop="dateCreated datePublished" datetime="2016-04-15T09:00:00+08:00">2016-04-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-07 07:23:12" itemprop="dateModified" datetime="2019-05-07T07:23:12+08:00">2019-05-07</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
     <div class="post-body" itemprop="articleBody">
+        <p>命令行编译Java</p>
+<a id="more"></a>
+<h2 id="Java代码："><a href="#Java代码：" class="headerlink" title="Java代码："></a>Java代码：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* a.java */</span></span><br><span class="line"><span class="keyword">package</span> com.pepelu.test;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">a</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;hello shell&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      
-      
-
-      
-        <p>命令行编译Java<br><a id="more"></a></p>
-<h2 id="Java代码："><a href="#Java代码：" class="headerlink" title="Java代码："></a>Java代码：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* a.java */</span></span><br><span class="line"><span class="keyword">package</span> com.pepelu.test;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">a</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"hello shell"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>类名要和文件名一致，不然会报错（找不到类啊什么的）。</p>
 <h2 id="编译，生成class文件："><a href="#编译，生成class文件：" class="headerlink" title="编译，生成class文件："></a>编译，生成class文件：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -target 1.7 -<span class="built_in">source</span> 1.7 -bootclasspath E:\environment\adt\sdk\platforms\android-20\android.jar -d E:\workspace\EclipseAndroid\test_pkg_out\classes E:\workspace\EclipseAndroid\HelloWorld\src\com\example\helloworld\*.java E:\workspace\EclipseAndroid\test_pkg_out\RFile\com\example\helloworld\R.java</span><br></pre></td></tr></table></figure>
+
 <p> -target &lt;版本&gt;               生成特定 VM 版本的类文件（可以不要）</p>
 <p> -source 1.7                  要求編譯器檢查使用的語法不超過指定的版本</p>
 <p> -bootclasspath &lt;路径&gt;        Bootstrap類別載入器（Class loader）</p>
@@ -463,43 +325,57 @@
 <p> 因为Android目前不支持jdk1.8，所以如果使用的jdk的版本大于1.7，编译Java文件时要加入：-target 1.7 ，JDK8預設的-target與-source都是1.8，-target在指定時，值必須大於或等於-source，所以在上面，若只指定-target為1.7，就會無法通過編譯，因為-source仍是預設值1.8。</p>
 <p>简化版：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -d  E:\workspace\java\temp  E:\workspace\java\temp\a.java</span><br></pre></td></tr></table></figure>
+
 <p>-d &lt;目录&gt;                   指定存放生成的类文件的位置，生成package的目录结构</p>
 <p>-sourcepath &lt;路径&gt;          指定查找输入源文件的位置</p>
 <p>如果把命令行光标移到所在目录，则文件名前的目录可以省略，如果有多个文件，用空格分隔</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -d classes a.java b.java</span><br></pre></td></tr></table></figure>
+
 <p>自动生成对应包名的文件目录</p>
 <p>更简化版：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -d . JavaFileName</span><br></pre></td></tr></table></figure>
+
 <p>在当前目录生成package结构的class文件。</p>
 <h2 id="执行a-class"><a href="#执行a-class" class="headerlink" title="执行a.class"></a>执行a.class</h2><p>执行前把shell定位到package开始目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java com.pepelu.test.a</span><br></pre></td></tr></table></figure>
+
 <p>保存输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java com.pepelu.test.a &gt;save.data</span><br></pre></td></tr></table></figure>
+
 <p>把输出保存到save.data文件中。</p>
 <h2 id="打包jar："><a href="#打包jar：" class="headerlink" title="打包jar："></a>打包jar：</h2><p>jar cvf [生成jar的名称.jar] [列出class文件]   //若有多个用空格隔开</p>
 <p>把控制台定位到package名对应的起始目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar -cvf a.jar .</span><br></pre></td></tr></table></figure>
+
 <p>“.” 代表当前目录，文件名可加目录</p>
 <p><code>升级版</code>：在任意目录打指定目录的jar包</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar -cvf a.jar -C E:\workspace\java\temp\classes .</span><br></pre></td></tr></table></figure>
+
 <p>-C： 先执行 <code>cd E:\workspace\java\temp\classes</code> , 再执行 <code>jar -cvf a.jar .</code>,但*.jar文件保存在shell光标所在文件目录。</p>
 <h2 id="执行jar包中的class文件"><a href="#执行jar包中的class文件" class="headerlink" title="执行jar包中的class文件"></a>执行jar包中的class文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp a.jar com.pepelu.test.a</span><br></pre></td></tr></table></figure>
+
 <p>-cp : 进入到jar包内执行 com.pepelu.test.a</p>
-<h2 id="引用其他jar包，编译："><a href="#引用其他jar包，编译：" class="headerlink" title="引用其他jar包，编译："></a>引用其他jar包，编译：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* b.java */</span></span><br><span class="line"><span class="keyword">package</span> net.pepelu.test;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">b</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">f1</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"this is b.class"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"no bb"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* c.java */</span></span><br><span class="line"><span class="keyword">package</span> com.pepelu.test;</span><br><span class="line"><span class="keyword">import</span> net.pepelu.test.b;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">c</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		b _b=<span class="keyword">new</span> b();</span><br><span class="line">		_b.f1();</span><br><span class="line">		System.out.println(<span class="string">"------------------"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="引用其他jar包，编译："><a href="#引用其他jar包，编译：" class="headerlink" title="引用其他jar包，编译："></a>引用其他jar包，编译：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* b.java */</span></span><br><span class="line"><span class="keyword">package</span> net.pepelu.test;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">b</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">f1</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;this is b.class&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;no bb&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* c.java */</span></span><br><span class="line"><span class="keyword">package</span> com.pepelu.test;</span><br><span class="line"><span class="keyword">import</span> net.pepelu.test.b;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">c</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		b _b=<span class="keyword">new</span> b();</span><br><span class="line">		_b.f1();</span><br><span class="line">		System.out.println(<span class="string">&quot;------------------&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>编译：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//生成class文件，b.java,c.java 同时编译：</span><br><span class="line">javac -d classes a.java b.java</span><br><span class="line"></span><br><span class="line">//分文件编译，先编译b.java生成jar包，再编译a.java</span><br><span class="line">javac -cp jarFileName JavaFileName -d classes</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;生成class文件，b.java,c.java 同时编译：</span><br><span class="line">javac -d classes a.java b.java</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;分文件编译，先编译b.java生成jar包，再编译a.java</span><br><span class="line">javac -cp jarFileName JavaFileName -d classes</span><br></pre></td></tr></table></figure>
+
 <h2 id="引用其他jar包，执行"><a href="#引用其他jar包，执行" class="headerlink" title="引用其他jar包，执行"></a>引用其他jar包，执行</h2><p>执行：执行前把shell定位到package开始目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//CMD:</span><br><span class="line">java -cp b.jar;c.jar; com.pepelu.test.c</span><br><span class="line"></span><br><span class="line">//PowerShell:</span><br><span class="line">java -cp &apos;b.jar;c.jar;&apos; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;CMD:</span><br><span class="line">java -cp b.jar;c.jar; com.pepelu.test.c</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;PowerShell:</span><br><span class="line">java -cp &#39;b.jar;c.jar;&#39; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+
 <p>jar包最后要加“；”</p>
 <p>jar包顺序可变</p>
-<p>在PowerShell中，把 <code>b.jar;</code>加单引号或双引号，因为PowerShell是面向对象的命令行，所以会把b.jar看做是一个文件对象，而Java需要接收的是一个jar文件地址字符串，所以要加引号把b.jar;转为字符串“;”号必须加。<br><a href="http://stackoverflow.com/questions/4685184/powershell-run-java-process-problem" target="_blank" rel="noopener">http://stackoverflow.com/questions/4685184/powershell-run-java-process-problem</a></p>
+<p>在PowerShell中，把 <code>b.jar;</code>加单引号或双引号，因为PowerShell是面向对象的命令行，所以会把b.jar看做是一个文件对象，而Java需要接收的是一个jar文件地址字符串，所以要加引号把b.jar;转为字符串“;”号必须加。<br><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/4685184/powershell-run-java-process-problem">http://stackoverflow.com/questions/4685184/powershell-run-java-process-problem</a></p>
 <h2 id="多jar包："><a href="#多jar包：" class="headerlink" title="多jar包："></a>多jar包：</h2><p>假设有个程序的启动方法在test.java里<br>运行Java程序是java test，但是如果要引用其他jar包，网上大多数的方法都是java -classpath xx.jar test<br>但是jar很多的话，就要一个一个写上去，非常麻烦。而且jar包可能经常变<br>现在用以下一句就能解决问题，假设jar包都放在lib文件夹里</p>
 <p>编译：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//CMD：</span><br><span class="line">javac -Djava.ext.dirs=lib test</span><br><span class="line"></span><br><span class="line">//PowerShell :</span><br><span class="line">javac &apos;-Djava.ext.dirs=lib&apos; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;CMD：</span><br><span class="line">javac -Djava.ext.dirs&#x3D;lib test</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;PowerShell :</span><br><span class="line">javac &#39;-Djava.ext.dirs&#x3D;lib&#39; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+
 <p>执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//CMD：</span><br><span class="line">java -Djava.ext.dirs=lib test</span><br><span class="line"></span><br><span class="line">//PowerShell :</span><br><span class="line">java &apos;-Djava.ext.dirs=lib&apos; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;CMD：</span><br><span class="line">java -Djava.ext.dirs&#x3D;lib test</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;PowerShell :</span><br><span class="line">java &#39;-Djava.ext.dirs&#x3D;lib&#39; com.pepelu.test.c</span><br></pre></td></tr></table></figure>
+
 <p>注意：要JDK1.6以上才可以</p>
-<h2 id="打包，配置-META-INF"><a href="#打包，配置-META-INF" class="headerlink" title="打包，配置 META-INF"></a>打包，配置 META-INF</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/* MANIFEST.MF */</span><br><span class="line">Manifest-Version: 1.0  </span><br><span class="line">Created-By: pepelu  </span><br><span class="line">Class-Path: com.pepelu.test</span><br><span class="line">Main-Class: com.pepelu.test.a</span><br><span class="line">(此处为空行)</span><br></pre></td></tr></table></figure>
+<h2 id="打包，配置-META-INF"><a href="#打包，配置-META-INF" class="headerlink" title="打包，配置 META-INF"></a>打包，配置 META-INF</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;* MANIFEST.MF *&#x2F;</span><br><span class="line">Manifest-Version: 1.0  </span><br><span class="line">Created-By: pepelu  </span><br><span class="line">Class-Path: com.pepelu.test</span><br><span class="line">Main-Class: com.pepelu.test.a</span><br><span class="line">(此处为空行)</span><br></pre></td></tr></table></figure>
+
 <p>第一行指定清单的版本，若无，则JDK默认生成：Manifest-Version: 1.0</p>
 <p>第二行指明创建的作者，若无，则JDK默认生成Created-By: 1.6.0_22(Sun Microsystems Inc.)</p>
 <p>第三行指定主类所在类路径</p>
@@ -507,366 +383,104 @@
 <p>在文件最后要加一行空行</p>
 <p>打包：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar -cvfm a.jar MANIFEST.MF -C classes .</span><br></pre></td></tr></table></figure>
+
 <p>-m : 指定MANIFEST.MF文件</p>
 <p>如果MANIFEST.MF末尾不加空行，则要重新指定主类所在类路径</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar -cvfme a.jar MANIFEST.MF com.pepelu.test.a -C classes .</span><br></pre></td></tr></table></figure>
+
 <p>运行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar a.jar</span><br></pre></td></tr></table></figure>
+
 <h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><p>主函数mian是可以传参的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args)</span><br></pre></td></tr></table></figure>
+
 <p>命令行执行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java com.pepelu.test.a blabla</span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-      
-    
-    
-
     
 
     <footer class="post-footer">
-      
 
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/04/14/ruby-install-soft-ssl-connection-error/" rel="next" title="用ruby跑命令行安装软件时报错：SSL_connect 相关">
-                <i class="fa fa-chevron-left"></i> 用ruby跑命令行安装软件时报错：SSL_connect 相关
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/17/python创建新文件/" rel="prev" title="Python创建新文件">
-                Python创建新文件 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
 
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="BlackNeko">
-            
-              <p class="site-author-name" itemprop="name">BlackNeko</p>
-              <div class="site-description motion-element" itemprop="description">我的征途是星辰大海</div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">56</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                      <a href="/categories/">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">7</span>
-                    <span class="site-state-item-name">分类</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                      <a href="/tags/">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">19</span>
-                    <span class="site-state-item-name">标签</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://github.com/AmoryPepelu" title="GitHub &rarr; https://github.com/AmoryPepelu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  
-                  
-                    
-                  
-                  
-                    
-                  
-                  <a href="https://amorypepelu.github.io/2010/01/05/about-me/" title="AboutMe &rarr; https://amorypepelu.github.io/2010/01/05/about-me/"><i class="fa fa-fw fa-globe"></i>AboutMe</a>
-                </span>
-              
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/04/14/ruby-install-soft-ssl-connection-error/" rel="prev" title="用ruby跑命令行安装软件时报错：SSL_connect 相关">
+                  <i class="fa fa-chevron-left"></i> 用ruby跑命令行安装软件时报错：SSL_connect 相关
+                </a>
             </div>
-          
-
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java代码："><span class="nav-number">1.</span> <span class="nav-text">Java代码：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译，生成class文件："><span class="nav-number">2.</span> <span class="nav-text">编译，生成class文件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行a-class"><span class="nav-number">3.</span> <span class="nav-text">执行a.class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包jar："><span class="nav-number">4.</span> <span class="nav-text">打包jar：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行jar包中的class文件"><span class="nav-number">5.</span> <span class="nav-text">执行jar包中的class文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用其他jar包，编译："><span class="nav-number">6.</span> <span class="nav-text">引用其他jar包，编译：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用其他jar包，执行"><span class="nav-number">7.</span> <span class="nav-text">引用其他jar包，执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多jar包："><span class="nav-number">8.</span> <span class="nav-text">多jar包：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包，配置-META-INF"><span class="nav-number">9.</span> <span class="nav-text">打包，配置 META-INF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充："><span class="nav-number">10.</span> <span class="nav-text">补充：</span></a></li></ol></div>
-            
-
+            <div class="post-nav-item">
+                <a href="/2016/08/17/python%E5%88%9B%E5%BB%BA%E6%96%B0%E6%96%87%E4%BB%B6/" rel="next" title="Python创建新文件">
+                  Python创建新文件 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">BlackNeko</span>
-
-  
-
-  
+    </footer>
+  </article>
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
 
 
 
 
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
-  </div>
-
-  
+      
 
 <script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+    </div>
+  </main>
 
+  <footer class="footer">
+    <div class="footer-inner">
+      
 
+      
 
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BlackNeko</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
 
+    </div>
+  </footer>
 
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
-
+  
 
 
 
@@ -886,85 +500,13 @@
 
 
   
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.1.0"></script>
-
-  <script src="/js/motion.js?v=7.1.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/schemes/muse.js?v=7.1.0"></script>
 
 
 
 
-  
-  <script src="/js/scrollspy.js?v=7.1.0"></script>
-<script src="/js/post-details.js?v=7.1.0"></script>
 
 
 
-  
-
-
-  <script src="/js/next-boot.js?v=7.1.0"></script>
-
-
-  
-
-  
-
-  
-
-  
-
-
-  
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
 
